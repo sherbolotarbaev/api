@@ -63,7 +63,7 @@ export class AuthService {
       .status(200)
       .redirect(
         user.isActive
-          ? `${this.appConfig.frontBaseUrl}/redirect`
+          ? `${this.appConfig.frontBaseUrl}/redirect?to=/guestbook`
           : `${this.appConfig.baseUrl}/logout?next=/sign-in?error=403`,
       );
   }
@@ -91,7 +91,7 @@ export class AuthService {
         }
 
         return response.redirect(
-          `${this.appConfig.frontBaseUrl}${request.query.next || '/'}`,
+          `${this.appConfig.frontBaseUrl}${request.query.next || '/guestbook'}`,
         );
       });
     });

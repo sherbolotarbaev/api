@@ -13,6 +13,10 @@ export const SecurityConfig = registerAs(securityRegToken, () => ({
   metaClientSecret: env('META_CLIENT_SECRET'),
   metaCallbackUrl: `${env('BASE_URL')}/meta/callback`,
 
+  githubClientId: env('GITHUB_CLIENT_ID'),
+  githubClientSecret: env('GITHUB_CLIENT_SECRET'),
+  githubCallbackUrl: `${env('BASE_URL')}/github/callback`,
+
   cookieSecret: env('COOKIE_SECRET'),
   sessionSecret: env('SESSION_SECRET'),
 

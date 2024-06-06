@@ -7,7 +7,11 @@ import type { Request, Response } from 'express';
 
 // import { type IAppConfig, AppConfig } from '~/config';
 import { type IAppConfig, AppConfig } from '../../../config'; // fix: vercel issue
-import type { IGoogleOauthUser, IMetaOauthUser } from '../common/interfaces';
+import type {
+  IGitHubOauthUser,
+  IGoogleOauthUser,
+  IMetaOauthUser,
+} from '../common/interfaces';
 
 // import { isDev } from '~/global/env';
 import { isDev } from '../../../global/env'; // fix: vercel issue
@@ -29,7 +33,7 @@ export class AuthService {
     surname,
     email,
     photo,
-  }: IGoogleOauthUser | IMetaOauthUser) {
+  }: IGoogleOauthUser | IMetaOauthUser | IGitHubOauthUser) {
     try {
       const user = await this.prisma.user.findUnique({
         where: {

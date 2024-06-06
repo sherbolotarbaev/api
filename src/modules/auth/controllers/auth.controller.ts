@@ -2,7 +2,11 @@ import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 
 import type { Request, Response } from 'express';
 
-import { GoogleOauthGuard, MetaOauthGuard } from '../common/guards';
+import {
+  GoogleOauthGuard,
+  MetaOauthGuard,
+  GitHubOauthGuard,
+} from '../common/guards';
 import { AuthUser, Public } from '../common/decorators';
 
 import { AuthService } from '../services';
@@ -22,6 +26,13 @@ export class AuthController {
   @Get('meta/callback')
   @UseGuards(MetaOauthGuard)
   async metaOauth(@AuthUser() user: IUser, @Res() response: Response) {
+    return this.authService.oauthCallback(user, response);
+  }
+
+  @Public()
+  @Get('github/callback')
+  @UseGuards(GitHubOauthGuard)
+  async githubOauth(@AuthUser() user: IUser, @Res() response: Response) {
     return this.authService.oauthCallback(user, response);
   }
 

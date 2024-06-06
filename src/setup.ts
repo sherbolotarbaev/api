@@ -26,12 +26,16 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
     infer: true,
   });
 
+  const { frontBaseUrl } = configService.get('app', {
+    infer: true,
+  });
+
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.use(helmet());
 
   app.enableCors({
-    origin: '*',
+    origin: [frontBaseUrl, 'http://localhost:3000'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });

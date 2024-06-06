@@ -10,7 +10,7 @@ import { Strategy, Profile } from 'passport-facebook';
 
 // import { type ISecurityConfig, SecurityConfig } from '~/config';
 import { type ISecurityConfig, SecurityConfig } from '../../../../config'; // fix: vercel issue
-import type { MetaOauthUser } from '../interfaces';
+import type { IMetaOauthUser } from '../interfaces';
 
 // import { AuthService } from '~/modules/auth/services';
 import { AuthService } from '../../../auth/services'; // fix: vercel issue
@@ -43,7 +43,7 @@ export class MetaOauthStrategy extends PassportStrategy(Strategy, 'facebook') {
 
     const { name, emails, photos } = profile;
 
-    const metaOauthUser: MetaOauthUser = {
+    const metaOauthUser: IMetaOauthUser = {
       name: name?.givenName || profile._json?.first_name,
       surname: name?.familyName || profile._json?.last_name,
       email: emails[0]?.value || profile._json?.email,

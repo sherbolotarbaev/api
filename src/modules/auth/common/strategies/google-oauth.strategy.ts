@@ -5,7 +5,7 @@ import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
 
 // import { type ISecurityConfig, SecurityConfig } from '~/config';
 import { type ISecurityConfig, SecurityConfig } from '../../../../config'; // fix: vercel issue
-import type { GoogleOauthUser } from '../interfaces';
+import type { IGoogleOauthUser } from '../interfaces';
 
 // import { AuthService } from '~/modules/auth/services';
 import { AuthService } from '../../../auth/services'; // fix: vercel issue
@@ -33,7 +33,7 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
   ) {
     const { name, emails, photos } = profile;
 
-    const googleOauthUser: GoogleOauthUser = {
+    const googleOauthUser: IGoogleOauthUser = {
       name: name.givenName,
       surname: name.familyName,
       email: emails[0].value,

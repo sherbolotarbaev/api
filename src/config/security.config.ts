@@ -15,6 +15,13 @@ export const SecurityConfig = registerAs(securityRegToken, () => ({
 
   cookieSecret: env('COOKIE_SECRET'),
   sessionSecret: env('SESSION_SECRET'),
+
+  hunterApiKey: env('HUNTER_API_KEY'),
+
+  ipInfoApiKey: env('IP_INFO_API_KEY'),
+
+  telegramBotApiKey: env('TELEGRAM_BOT_API_KEY'),
+  telegramBotChatId: env('TELEGRAM_BOT_CHAT_ID'),
 }));
 
 export type ISecurityConfig = ConfigType<typeof SecurityConfig>;

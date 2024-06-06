@@ -10,7 +10,15 @@ import { AppController } from './app.controller';
 import config from './config';
 
 import { DatabaseModule } from './shared/database';
-import { AuthModule, UserModule, GuestbookModule, ViewModule } from './modules';
+import { EmailModule } from './shared/email';
+import { LocationModule } from './shared/location';
+import {
+  AuthModule,
+  UserModule,
+  GuestbookModule,
+  ViewModule,
+  ContactModule,
+} from './modules';
 import { SessionAuthGuard } from './modules/auth/common/guards';
 
 @Module({
@@ -29,10 +37,13 @@ import { SessionAuthGuard } from './modules/auth/common/guards';
       }),
     }),
     DatabaseModule,
+    EmailModule,
+    LocationModule,
     AuthModule,
     UserModule,
     GuestbookModule,
     ViewModule,
+    ContactModule,
   ],
   controllers: [AppController],
   providers: [

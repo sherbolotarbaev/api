@@ -1,4 +1,4 @@
-export interface GoogleOauthUser {
+export interface IGoogleOauthUser {
   readonly name: string;
   readonly surname: string;
   readonly email: string;

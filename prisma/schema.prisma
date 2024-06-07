@@ -40,3 +40,11 @@ model View {
   slug  String @id
   count Int    @default(0)
 }
+
+model EmailOtp {
+  email String @id @unique
+  otp   String
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

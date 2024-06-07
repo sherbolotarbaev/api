@@ -3,7 +3,8 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 // import { PrismaService } from '~/shared/database/services';
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
 
-import { VIEWS_NOT_FOUND } from '../common/constants';
+// import { ErrorEnum } from '~/constants/error.constant';
+import { ErrorEnum } from '../../../constants/error.constant'; // fix: vercel issue
 
 @Injectable()
 export class ViewService {
@@ -37,7 +38,7 @@ export class ViewService {
     const views = await this.prisma.view.findMany();
 
     if (!views.length) {
-      throw new NotFoundException(VIEWS_NOT_FOUND);
+      throw new NotFoundException(ErrorEnum.VIEWS_NOT_FOUND);
     }
 
     try {

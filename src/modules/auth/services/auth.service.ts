@@ -1,9 +1,23 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-
-// import { PrismaService } from '~/shared/database/services';
-import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 
 import type { Request, Response } from 'express';
+
+// import { UserService } from '~/modules/user/services';
+import { UserService } from '../../user/services'; // fix: vercel issue
+// import { PrismaService } from '~/shared/database/services';
+import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
+// import { EmailService } from '~/shared/email/services';
+import { EmailService } from '../../../shared/email/services'; // fix: vercel issue
+
+// import { hash } from '~/utils/bcrypt';
+import { compare, hash } from '../../../utils/bcrypt'; // fix: vercel issue
+import moment from 'moment';
 
 // import { type IAppConfig, AppConfig } from '~/config';
 import { type IAppConfig, AppConfig } from '../../../config'; // fix: vercel issue
@@ -17,7 +31,9 @@ import type {
 import { isDev } from '../../../global/env'; // fix: vercel issue
 // import { COOKIE_NAME } from '~/constants/cookie.constant';
 import { COOKIE_NAME } from '../../../constants/cookie.constant'; // fix: vercel issue
-import { LOGOUT_FAILED } from '../common/constants';
+// import { ErrorEnum } from '~/constants/error.constant';
+import { ErrorEnum } from '../../../constants/error.constant';
+import { LoginOtpDto, SendOtpDto } from '../dto';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +42,8 @@ export class AuthService {
   constructor(
     @Inject(AppConfig.KEY) private readonly appConfig: IAppConfig,
     private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
+    private readonly userService: UserService,
   ) {}
 
   async validateUser({
@@ -68,6 +86,73 @@ export class AuthService {
       );
   }
 
+  async loginOtp({ email, otp }: LoginOtpDto) {
+    const user = await this.userService.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException(ErrorEnum.USER_NOT_FOUND);
+    }
+
+    const emailOtp = await this.prisma.emailOtp.findUnique({
+      where: {
+        email: user.email,
+      },
+    });
+
+    const otpMatch = await compare(otp, emailOtp.otp);
+    if (!otpMatch) {
+      throw new BadRequestException(ErrorEnum.VERIFICATION_CODE_INVALID);
+    }
+
+    if (this.checkExpiration(emailOtp.expiresAt)) {
+      throw new BadRequestException(ErrorEnum.VERIFICATION_CODE_EXPIRED);
+    }
+
+    try {
+      return user;
+    } catch (error) {
+      this.logger.error('Log in via OTP failed:', error.message);
+    }
+  }
+
+  async sendOtp({ email }: SendOtpDto) {
+    const user = await this.userService.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException(ErrorEnum.USER_NOT_FOUND);
+    }
+
+    const otp = this.generateCode();
+    const otpHash = await hash(otp);
+    const expiresAt = this.getExpiration();
+
+    await this.prisma.emailOtp.upsert({
+      where: {
+        email: user.email,
+      },
+      create: {
+        email: user.email,
+        otp: otpHash,
+        expiresAt,
+      },
+      update: {
+        otp: otpHash,
+        expiresAt,
+      },
+    });
+
+    await this.emailService.sendVerificationCode({
+      email: user.email,
+      code: otp,
+    });
+
+    try {
+      return { email: user.email };
+    } catch (error) {
+      this.logger.error('Failed to send OTP:', error.message);
+    }
+  }
+
   async logout(request: Request, response: Response) {
     response.clearCookie(COOKIE_NAME, {
       httpOnly: true,
@@ -81,13 +166,13 @@ export class AuthService {
     request.logOut((error) => {
       if (error) {
         this.logger.error('Failed to log out:', error.message);
-        return response.status(501).send(LOGOUT_FAILED);
+        return response.status(501).send(ErrorEnum.LOGOUT_FAILED);
       }
 
       request.session.destroy((error) => {
         if (error) {
           this.logger.error('Failed to destroy session:', error.message);
-          return response.status(501).send(LOGOUT_FAILED);
+          return response.status(501).send(ErrorEnum.LOGOUT_FAILED);
         }
 
         return response.redirect(
@@ -95,5 +180,18 @@ export class AuthService {
         );
       });
     });
+  }
+
+  private generateCode() {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    return code;
+  }
+
+  private getExpiration() {
+    return moment().add(10, 'minutes').toDate();
+  }
+
+  private checkExpiration(expiresAt: Date) {
+    return moment.utc(expiresAt).isBefore(moment().utc());
   }
 }

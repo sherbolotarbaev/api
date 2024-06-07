@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { HttpModule } from '@nestjs/axios';
 
 import { AuthService } from './services';
-import { AuthController } from './controllers';
+import { AccountController, AuthController } from './controllers';
 
 import { UserModule } from '../user/user.module';
 
@@ -13,6 +13,7 @@ import {
   GoogleOauthStrategy,
   MetaOauthStrategy,
   GitHubStrategy,
+  LocalOtpStrategy,
 } from './common/strategies';
 
 @Module({
@@ -22,9 +23,10 @@ import {
     GoogleOauthStrategy,
     MetaOauthStrategy,
     GitHubStrategy,
+    LocalOtpStrategy,
     SessionSerializer,
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, AccountController],
   exports: [AuthService],
 })
 export class AuthModule {}

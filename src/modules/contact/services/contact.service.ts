@@ -14,7 +14,8 @@ import { TelegramService } from 'nestjs-telegram';
 // import { ISecurityConfig, SecurityConfig } from '~/config';
 import { type ISecurityConfig, SecurityConfig } from '../../../config'; // fix: vercel issue
 
-import { INVALID_EMAIL } from '../common/constants';
+// import { ErrorEnum } from '~/constants/error.constant';
+import { ErrorEnum } from '../../../constants/error.constant'; // fix: vercel issue
 import { NewContactMessageDto } from '../dto';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class ContactService {
     });
 
     if (!isEmailValid) {
-      throw new BadRequestException(INVALID_EMAIL);
+      throw new BadRequestException(ErrorEnum.INVALID_EMAIL);
     }
 
     const location = await this.locationService.getLocation({

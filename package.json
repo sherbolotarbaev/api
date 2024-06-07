@@ -26,6 +26,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/axios": "^3.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.2",
@@ -35,18 +36,21 @@
     "@nestjs/throttler": "^5.1.2",
     "@prisma/client": "^5.14.0",
     "@quixo3/prisma-session-store": "^3.1.13",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
+    "moment": "^2.30.1",
     "nestjs-telegram": "^1.2.0",
     "node-ipinfo": "^3.5.1",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
     "passport-github": "^1.1.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1"
   },
@@ -54,6 +58,7 @@
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/body-parser": "^1.19.5",
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
@@ -64,6 +69,7 @@
     "@types/passport-facebook": "^3.0.3",
     "@types/passport-github": "^1.1.12",
     "@types/passport-google-oauth20": "^2.0.16",
+    "@types/passport-local": "^1.0.38",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
@@ -93,11 +99,7 @@
     }
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
+    "moduleFileExtensions": ["js", "json", "ts"],
     "rootDir": "src",
     "moduleNameMapper": {
       "^~/(.*)$": "<rootDir>/$1"
@@ -106,9 +108,7 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
+    "collectCoverageFrom": ["**/*.(t|j)s"],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

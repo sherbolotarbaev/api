@@ -24,6 +24,6 @@
     "forceConsistentCasingInFileNames": false,
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/templates/**/*.hbs"],
   "exclude": ["node_modules", "scripts", "dist"]
 }

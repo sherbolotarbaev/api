@@ -52,7 +52,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalOtpGuard)
   async loginOtp(@AuthUser() user: IUser) {
-    return { user };
+    return user;
   }
 
   @Public()

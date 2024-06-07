@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Inject,
   Injectable,
   Logger,
@@ -93,6 +94,10 @@ export class AuthService {
       throw new NotFoundException(ErrorEnum.USER_NOT_FOUND);
     }
 
+    if (!user.isActive) {
+      throw new ForbiddenException(ErrorEnum.USER_DEACTIVATED);
+    }
+
     const emailOtp = await this.prisma.emailOtp.findUnique({
       where: {
         email: user.email,
@@ -120,6 +125,10 @@ export class AuthService {
 
     if (!user) {
       throw new NotFoundException(ErrorEnum.USER_NOT_FOUND);
+    }
+
+    if (!user.isActive) {
+      throw new ForbiddenException(ErrorEnum.USER_DEACTIVATED);
     }
 
     const otp = this.generateCode();

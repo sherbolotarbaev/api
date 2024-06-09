@@ -15,10 +15,13 @@ import { UserService } from '../../user/services'; // fix: vercel issue
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
 // import { EmailService } from '~/shared/email/services';
 import { EmailService } from '../../../shared/email/services'; // fix: vercel issue
+// import { LocationService } from '~/shared/location/services';
+import { LocationService } from '../../../shared/location/services'; // fix: vercel issue
 
 // import { hash } from '~/utils/bcrypt';
 import { compare, hash } from '../../../utils/bcrypt'; // fix: vercel issue
 import moment from 'moment';
+import type { IPinfo } from 'node-ipinfo';
 
 // import { type IAppConfig, AppConfig } from '~/config';
 import { type IAppConfig, AppConfig } from '../../../config'; // fix: vercel issue
@@ -45,6 +48,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
     private readonly userService: UserService,
+    private readonly locationService: LocationService,
   ) {}
 
   async validateUser({
@@ -58,6 +62,9 @@ export class AuthService {
         where: {
           email,
         },
+        include: {
+          metaData: true,
+        },
       });
 
       if (!user) {
@@ -67,6 +74,9 @@ export class AuthService {
             surname,
             email,
             photo,
+          },
+          include: {
+            metaData: true,
           },
         });
       }
@@ -85,6 +95,13 @@ export class AuthService {
           ? `${this.appConfig.frontBaseUrl}/redirect?to=/guestbook`
           : `${this.appConfig.baseUrl}/logout?next=/sign-in?error=403`,
       );
+  }
+
+  async getMe(ip: string, user: IUser) {
+    const location = await this.locationService.getLocation({ ip });
+    this.setMetaData(user.id, location);
+
+    return user;
   }
 
   async loginOtp({ email, otp }: LoginOtpDto) {
@@ -202,5 +219,33 @@ export class AuthService {
 
   private checkExpiration(expiresAt: Date) {
     return moment.utc(expiresAt).isBefore(moment().utc());
+  }
+
+  private async setMetaData(
+    userId: number,
+    { city, country, region, timezone, ip }: IPinfo,
+  ) {
+    await this.prisma.userMetaData.upsert({
+      where: {
+        userId,
+      },
+      create: {
+        userId,
+        ip,
+        city,
+        country,
+        region,
+        timezone,
+        lastSeen: new Date(),
+      },
+      update: {
+        ip,
+        city,
+        country,
+        region,
+        timezone,
+        lastSeen: new Date(),
+      },
+    });
   }
 }

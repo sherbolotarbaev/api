@@ -10,6 +10,8 @@ import {
 import type { Request, Response } from 'express';
 
 import { AuthUser } from '../common/decorators';
+// import { Ip } from '~/decorators/ip.decorator';
+import { Ip } from '../../../decorators/ip.decorator'; // fix: vercel issue
 
 import { AuthService } from '../services';
 
@@ -19,8 +21,8 @@ export class AccountController {
 
   @Get('me')
   @HttpCode(HttpStatus.OK)
-  async getMe(@AuthUser() user: IUser) {
-    return user;
+  async getMe(@Ip() ip: string, @AuthUser() user: IUser) {
+    return this.authService.getMe(ip, user);
   }
 
   @Get('logout')

@@ -10,13 +10,20 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<IUser[] | null> {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: {
+        metaData: true,
+      },
+    });
   }
 
   async findById(id: number): Promise<IUser | null> {
     return this.prisma.user.findFirst({
       where: {
         id,
+      },
+      include: {
+        metaData: true,
       },
     });
   }
@@ -25,6 +32,9 @@ export class UserService {
     return this.prisma.user.findUnique({
       where: {
         email: email.toLowerCase().trim(),
+      },
+      include: {
+        metaData: true,
       },
     });
   }
@@ -35,6 +45,9 @@ export class UserService {
         id: userId,
       },
       data,
+      include: {
+        metaData: true,
+      },
     });
   }
 }

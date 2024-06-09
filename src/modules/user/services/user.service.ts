@@ -23,7 +23,16 @@ export class UserService {
         id,
       },
       include: {
-        metaData: true,
+        metaData: {
+          select: {
+            ip: true,
+            city: true,
+            region: true,
+            country: true,
+            timezone: true,
+            lastSeen: true,
+          },
+        },
       },
     });
   }
@@ -34,7 +43,16 @@ export class UserService {
         email: email.toLowerCase().trim(),
       },
       include: {
-        metaData: true,
+        metaData: {
+          select: {
+            ip: true,
+            city: true,
+            region: true,
+            country: true,
+            timezone: true,
+            lastSeen: true,
+          },
+        },
       },
     });
   }
@@ -46,7 +64,16 @@ export class UserService {
       },
       data,
       include: {
-        metaData: true,
+        metaData: {
+          select: {
+            ip: true,
+            city: true,
+            region: true,
+            country: true,
+            timezone: true,
+            lastSeen: true,
+          },
+        },
       },
     });
   }

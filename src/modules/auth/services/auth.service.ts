@@ -63,7 +63,16 @@ export class AuthService {
           email,
         },
         include: {
-          metaData: true,
+          metaData: {
+            select: {
+              ip: true,
+              city: true,
+              region: true,
+              country: true,
+              timezone: true,
+              lastSeen: true,
+            },
+          },
         },
       });
 
@@ -76,7 +85,16 @@ export class AuthService {
             photo,
           },
           include: {
-            metaData: true,
+            metaData: {
+              select: {
+                ip: true,
+                city: true,
+                region: true,
+                country: true,
+                timezone: true,
+                lastSeen: true,
+              },
+            },
           },
         });
       }

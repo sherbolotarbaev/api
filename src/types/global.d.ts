@@ -13,7 +13,6 @@ declare global {
   }
 
   interface UserMetaData {
-    readonly userId: number;
     readonly ip: string;
     readonly city?: string;
     readonly region?: string;

@@ -51,7 +51,7 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
   authenticate(request: Request, options: any) {
     super.authenticate(request, {
       ...options,
-      state: `next=${request.query.next || '/'}`,
+      state: `next=${request.query.next || '/'}&source=${request.query.source}`,
     });
   }
 }

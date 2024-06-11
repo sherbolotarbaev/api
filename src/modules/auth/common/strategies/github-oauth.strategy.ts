@@ -67,7 +67,7 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
   authenticate(request: Request, options: any) {
     super.authenticate(request, {
       ...options,
-      state: `next=${request.query.next || '/'}`,
+      state: `next=${request.query.next || '/'}&source=${request.query.source}`,
     });
   }
 }

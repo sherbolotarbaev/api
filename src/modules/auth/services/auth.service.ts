@@ -216,7 +216,7 @@ export class AuthService {
         }
 
         return response.redirect(
-          `${this.appConfig.frontBaseUrl}${request.query.next || '/guestbook'}`,
+          `${this.appConfig.frontBaseUrl}${request.query.next || '/'}`,
         );
       });
     });

@@ -56,7 +56,7 @@ export class AuthController {
   }
 
   @Public()
-  @Post('/send-otp')
+  @Post('send-otp')
   @HttpCode(HttpStatus.OK)
   async sendOtp(@Body() dto: SendOtpDto) {
     return this.authService.sendOtp(dto);

@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 
-import { ThrottlerModule, seconds } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
 
 import { AppController } from './app.controller';
 
@@ -50,6 +50,10 @@ import { SessionAuthGuard } from './modules/auth/common/guards';
     {
       provide: APP_GUARD,
       useClass: SessionAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

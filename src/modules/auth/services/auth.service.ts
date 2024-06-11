@@ -25,11 +25,7 @@ import type { IPinfo } from 'node-ipinfo';
 
 // import { type IAppConfig, AppConfig } from '~/config';
 import { type IAppConfig, AppConfig } from '../../../config'; // fix: vercel issue
-import type {
-  IGitHubOauthUser,
-  IGoogleOauthUser,
-  IMetaOauthUser,
-} from '../common/interfaces';
+import type { IGitHubOauthUser, IGoogleOauthUser } from '../common/interfaces';
 
 // import { isDev } from '~/global/env';
 import { isDev } from '../../../global/env'; // fix: vercel issue
@@ -56,7 +52,7 @@ export class AuthService {
     surname,
     email,
     photo,
-  }: IGoogleOauthUser | IMetaOauthUser | IGitHubOauthUser) {
+  }: IGoogleOauthUser | IGitHubOauthUser) {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -105,12 +101,12 @@ export class AuthService {
     }
   }
 
-  async oauthCallback(user: IUser, response: Response) {
+  async oauthCallback(user: IUser, next: string, response: Response) {
     return response
       .status(200)
       .redirect(
         user.isActive
-          ? `${this.appConfig.frontBaseUrl}/redirect?to=/guestbook`
+          ? `${this.appConfig.frontBaseUrl}/redirect?to=${next}`
           : `${this.appConfig.baseUrl}/logout?next=/sign-in?error=403`,
       );
   }

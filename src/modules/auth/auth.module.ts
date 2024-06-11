@@ -11,7 +11,6 @@ import { UserModule } from '../user/user.module';
 import { SessionSerializer } from './common/serializers';
 import {
   GoogleOauthStrategy,
-  MetaOauthStrategy,
   GitHubStrategy,
   LocalOtpStrategy,
 } from './common/strategies';
@@ -21,7 +20,6 @@ import {
   providers: [
     AuthService,
     GoogleOauthStrategy,
-    MetaOauthStrategy,
     GitHubStrategy,
     LocalOtpStrategy,
     SessionSerializer,

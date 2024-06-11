@@ -2,6 +2,8 @@ import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { HttpService } from '@nestjs/axios';
 
+import type { Request } from 'express';
+
 import { Strategy, Profile } from 'passport-github';
 import { firstValueFrom } from 'rxjs';
 
@@ -25,10 +27,12 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
       clientSecret: securityConfig.githubClientSecret,
       callbackURL: securityConfig.githubCallbackUrl,
       scope: ['public_profile', 'user:email'],
+      passReqToCallback: true,
     });
   }
 
   async validate(
+    _request: Request,
     _accessToken: string,
     _refreshToken: string,
     profile: Profile,
@@ -58,5 +62,12 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
 
     const user = await this.authService.validateUser(githubOauthUser);
     done(null, user);
+  }
+
+  authenticate(request: Request, options: any) {
+    super.authenticate(request, {
+      ...options,
+      state: `next=${request.query.next || '/'}`,
+    });
   }
 }

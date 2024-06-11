@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -13,7 +14,6 @@ import type { Response } from 'express';
 
 import {
   GoogleOauthGuard,
-  MetaOauthGuard,
   GitHubOauthGuard,
   LocalOtpGuard,
 } from '../common/guards';
@@ -30,22 +30,27 @@ export class AuthController {
   @Get('google/callback')
   @HttpCode(HttpStatus.OK)
   @UseGuards(GoogleOauthGuard)
-  async googleOauth(@AuthUser() user: IUser, @Res() response: Response) {
-    return this.authService.oauthCallback(user, response);
-  }
-
-  @Get('meta/callback')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(MetaOauthGuard)
-  async metaOauth(@AuthUser() user: IUser, @Res() response: Response) {
-    return this.authService.oauthCallback(user, response);
+  async googleOauth(
+    @Query('state') state: string,
+    @AuthUser() user: IUser,
+    @Res() response: Response,
+  ) {
+    const queryParams = new URLSearchParams(state);
+    const next = queryParams.get('next');
+    return this.authService.oauthCallback(user, next, response);
   }
 
   @Get('github/callback')
   @HttpCode(HttpStatus.OK)
   @UseGuards(GitHubOauthGuard)
-  async githubOauth(@AuthUser() user: IUser, @Res() response: Response) {
-    return this.authService.oauthCallback(user, response);
+  async githubOauth(
+    @Query('state') state: string,
+    @AuthUser() user: IUser,
+    @Res() response: Response,
+  ) {
+    const queryParams = new URLSearchParams(state);
+    const next = queryParams.get('next');
+    return this.authService.oauthCallback(user, next, response);
   }
 
   @Post('login')

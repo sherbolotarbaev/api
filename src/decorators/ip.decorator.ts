@@ -5,7 +5,7 @@ import type { Request } from 'express';
 export const Ip = createParamDecorator(
   (_data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<Request>();
-    let ip = request.headers['x-forwarded-for'];
+    let ip = request.headers['X-Forwarded-For'];
 
     if (!ip) {
       ip =

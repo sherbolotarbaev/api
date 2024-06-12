@@ -8,7 +8,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 import type { Request } from 'express';
 
-import { PUBLIC_KEY } from '../decorators/public.decorator';
+import { PUBLIC_KEY } from '../decorators';
 
 @Injectable()
 export class SessionAuthGuard extends AuthGuard('session') {

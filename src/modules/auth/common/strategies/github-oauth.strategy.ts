@@ -37,7 +37,7 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
     _refreshToken: string,
     profile: Profile,
     done: (error: HttpException, user?: IGitHubOauthUser, info?: any) => void,
-  ) {
+  ): Promise<void> {
     const { username, displayName, photos } = profile;
 
     const { data } = await firstValueFrom(
@@ -64,7 +64,7 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
     done(null, user);
   }
 
-  authenticate(request: Request, options: any) {
+  authenticate(request: Request, options: any): void {
     super.authenticate(request, {
       ...options,
       state: `next=${request.query.next || '/'}&source=${request.query.source}`,

@@ -7,15 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String   @db.VarChar(64)
-  surname   String   @db.VarChar(64)
-  photo     String?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  role       UserRole @default(USER)
+  email      String   @unique
+  name       String   @db.VarChar(64)
+  surname    String   @db.VarChar(64)
+  photo      String?
+  isActive   Boolean  @default(true)
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   metaData UserMetaData?
 }

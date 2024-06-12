@@ -28,7 +28,7 @@ export class EmailService {
     private readonly mailerService: MailerService,
   ) {}
 
-  async verifyEmail({ email }: VerifyEmailDto) {
+  async verifyEmail({ email }: VerifyEmailDto): Promise<boolean> {
     try {
       const {
         data: { data },
@@ -65,7 +65,13 @@ export class EmailService {
     }
   }
 
-  async sendVerificationCode({ email, code }: SendVerificationCodeDto) {
+  async sendVerificationCode({
+    email,
+    code,
+  }: SendVerificationCodeDto): Promise<{
+    email: string;
+    code: string;
+  }> {
     const subject = 'Verification Code (Sign in)';
     const template = './verification-code';
 

@@ -34,7 +34,7 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
     _refreshToken: string,
     profile: Profile,
     done: VerifyCallback,
-  ) {
+  ): Promise<void> {
     const { name, emails, photos } = profile;
 
     const googleOauthUser: IGoogleOauthUser = {
@@ -48,7 +48,7 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
     done(null, user);
   }
 
-  authenticate(request: Request, options: any) {
+  authenticate(request: Request, options: any): void {
     super.authenticate(request, {
       ...options,
       state: `next=${request.query.next || '/'}&source=${request.query.source}`,

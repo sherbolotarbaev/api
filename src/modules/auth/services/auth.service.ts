@@ -52,7 +52,7 @@ export class AuthService {
     surname,
     email,
     photo,
-  }: IGoogleOauthUser | IGitHubOauthUser) {
+  }: IGoogleOauthUser | IGitHubOauthUser): Promise<IUser> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -101,7 +101,11 @@ export class AuthService {
     }
   }
 
-  async oauthCallback(user: IUser, next: string, response: Response) {
+  async oauthCallback(
+    user: IUser,
+    next: string,
+    response: Response,
+  ): Promise<void> {
     return response
       .status(200)
       .redirect(
@@ -111,14 +115,14 @@ export class AuthService {
       );
   }
 
-  async getMe(ip: string, user: IUser) {
+  async getMe(ip: string, user: IUser): Promise<IUser> {
     const location = await this.locationService.getLocation({ ip });
     this.setMetaData(user.id, location);
 
     return user;
   }
 
-  async loginOtp({ email, otp }: LoginOtpDto) {
+  async loginOtp({ email, otp }: LoginOtpDto): Promise<IUser> {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
@@ -151,7 +155,7 @@ export class AuthService {
     }
   }
 
-  async sendOtp({ email }: SendOtpDto) {
+  async sendOtp({ email }: SendOtpDto): Promise<{ email: string }> {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
@@ -193,7 +197,7 @@ export class AuthService {
     }
   }
 
-  async logout(request: Request, response: Response) {
+  async logout(request: Request, response: Response): Promise<void> {
     response.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       path: '/',
@@ -222,23 +226,23 @@ export class AuthService {
     });
   }
 
-  private generateCode() {
+  private generateCode(): string {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     return code;
   }
 
-  private getExpiration() {
+  private getExpiration(): Date {
     return moment().add(10, 'minutes').toDate();
   }
 
-  private checkExpiration(expiresAt: Date) {
+  private checkExpiration(expiresAt: Date): boolean {
     return moment.utc(expiresAt).isBefore(moment().utc());
   }
 
   private async setMetaData(
     userId: number,
     { city, country, region, timezone, ip }: IPinfo,
-  ) {
+  ): Promise<void> {
     await this.prisma.userMetaData.upsert({
       where: {
         userId,

@@ -30,7 +30,10 @@ export class ContactService {
     private readonly telegram: TelegramService,
   ) {}
 
-  async newMessage(ip: string, { name, email, message }: NewContactMessageDto) {
+  async newMessage(
+    ip: string,
+    { name, email, message }: NewContactMessageDto,
+  ): Promise<{ success: boolean }> {
     const isEmailValid = await this.emailService.verifyEmail({
       email,
     });

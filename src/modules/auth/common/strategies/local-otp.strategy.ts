@@ -15,7 +15,7 @@ export class LocalOtpStrategy extends PassportStrategy(Strategy, 'local') {
     });
   }
 
-  async validate(email: string, otp: string) {
+  async validate(email: string, otp: string): Promise<IUser> {
     return this.authService.loginOtp({
       email,
       otp,

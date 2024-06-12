@@ -6,7 +6,9 @@ export class AppController {
   @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
-  async main() {
+  async main(): Promise<{
+    message: string;
+  }> {
     return {
       message: 'hello',
     };

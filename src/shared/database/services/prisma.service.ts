@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 // import { ConfigKeyPaths } from '~/config';
 import { ConfigKeyPaths } from '../../../config'; // fix: vercel issue
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaService
@@ -28,11 +28,11 @@ export class PrismaService
     });
   }
 
-  get session() {
+  get session(): Prisma.SessionDelegate {
     return this.session;
   }
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     try {
       await this.$connect();
       this.logger.log('Prisma connected to the database successfully');
@@ -42,7 +42,7 @@ export class PrismaService
     }
   }
 
-  async onModuleDestroy() {
+  async onModuleDestroy(): Promise<void> {
     try {
       await this.$disconnect();
       this.logger.log('Prisma disconnected from the database successfully');

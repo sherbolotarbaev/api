@@ -9,11 +9,22 @@ import { UpdateUserDto } from '../dto';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private UserInlude = {
+    metaData: {
+      select: {
+        ip: true,
+        city: true,
+        region: true,
+        country: true,
+        timezone: true,
+        lastSeen: true,
+      },
+    },
+  };
+
   async findAll(): Promise<IUser[] | null> {
     return this.prisma.user.findMany({
-      include: {
-        metaData: true,
-      },
+      include: this.UserInlude,
     });
   }
 
@@ -22,18 +33,7 @@ export class UserService {
       where: {
         id,
       },
-      include: {
-        metaData: {
-          select: {
-            ip: true,
-            city: true,
-            region: true,
-            country: true,
-            timezone: true,
-            lastSeen: true,
-          },
-        },
-      },
+      include: this.UserInlude,
     });
   }
 
@@ -42,18 +42,7 @@ export class UserService {
       where: {
         email: email.toLowerCase().trim(),
       },
-      include: {
-        metaData: {
-          select: {
-            ip: true,
-            city: true,
-            region: true,
-            country: true,
-            timezone: true,
-            lastSeen: true,
-          },
-        },
-      },
+      include: this.UserInlude,
     });
   }
 
@@ -63,18 +52,16 @@ export class UserService {
         id: userId,
       },
       data,
-      include: {
-        metaData: {
-          select: {
-            ip: true,
-            city: true,
-            region: true,
-            country: true,
-            timezone: true,
-            lastSeen: true,
-          },
-        },
+      include: this.UserInlude,
+    });
+  }
+
+  async deleteUser(userId: number): Promise<IUser> {
+    return this.prisma.user.delete({
+      where: {
+        id: userId,
       },
+      include: this.UserInlude,
     });
   }
 }

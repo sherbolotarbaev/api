@@ -16,7 +16,7 @@ export class SessionAuthGuard extends AuthGuard('session') {
     super();
   }
 
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
 
     const user = request.user as IUser;

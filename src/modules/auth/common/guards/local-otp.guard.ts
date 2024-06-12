@@ -10,7 +10,7 @@ import { LoginOtpDto } from '../../dto';
 
 @Injectable()
 export class LocalOtpGuard extends AuthGuard('local') {
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const response = context.switchToHttp().getResponse<Response>();
 

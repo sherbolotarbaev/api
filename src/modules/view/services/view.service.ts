@@ -12,7 +12,7 @@ export class ViewService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async addView(slug: string) {
+  async addView(slug: string): Promise<IView> {
     try {
       return this.prisma.view.upsert({
         where: {
@@ -34,7 +34,7 @@ export class ViewService {
     }
   }
 
-  async getViews() {
+  async getViews(): Promise<IView[]> {
     const views = await this.prisma.view.findMany();
 
     if (!views.length) {

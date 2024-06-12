@@ -11,7 +11,9 @@ export class GuestbookService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async newGuestbookMessage(dto: NewGuestbookMessageDto) {
+  async newGuestbookMessage(
+    dto: NewGuestbookMessageDto,
+  ): Promise<IGuestBookMessage> {
     try {
       return this.prisma.guestBookMessage.create({
         data: dto,
@@ -22,7 +24,11 @@ export class GuestbookService {
     }
   }
 
-  async getGuestbookMessages({ take }: GetGuestbookMessagesDto) {
+  async getGuestbookMessages({ take }: GetGuestbookMessagesDto): Promise<{
+    totalCount: number;
+    count: number;
+    items: IGuestBookMessage[];
+  }> {
     const totalCount = await this.prisma.guestBookMessage.count();
 
     const messages = await this.prisma.guestBookMessage.findMany({

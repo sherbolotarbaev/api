@@ -27,6 +27,7 @@ export class GuestbookService {
     author: {
       select: {
         name: true,
+        email: true,
         photo: true,
       },
     },

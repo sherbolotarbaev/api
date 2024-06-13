@@ -40,6 +40,7 @@ declare global {
     readonly updatedAt: Date;
     readonly author: {
       readonly name: string;
+      readonly email: string;
       readonly photo: string;
     };
   }

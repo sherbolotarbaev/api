@@ -9,7 +9,7 @@ export const Ip = createParamDecorator(
       request.headers['x-forwarded-for'] ||
       request.headers['x-real-ip'] ||
       request.socket.remoteAddress ||
-      '127.0.0.1';
+      '';
 
     const ipAddress = Array.isArray(ip) ? ip[0] : ip;
     return ipAddress;

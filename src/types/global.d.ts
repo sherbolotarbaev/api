@@ -35,10 +35,13 @@ declare global {
   interface IGuestBookMessage {
     readonly id: number;
     readonly message: string;
-    readonly name: string;
-    readonly email: string;
-    readonly image: string;
+    readonly isEdited: boolean;
     readonly createdAt: Date;
+    readonly updatedAt: Date;
+    readonly author: {
+      readonly name: string;
+      readonly photo: string;
+    };
   }
 
   interface IView {

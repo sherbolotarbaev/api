@@ -1,9 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 
 // import { PrismaService } from '~/shared/database/services';
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
 
-import { GetGuestbookMessagesDto, NewGuestbookMessageDto } from '../dto';
+// import { ErrorEnum } from '~/constants/error.constant';
+import { ErrorEnum } from '../../../constants/error.constant'; // fix: vercel issue
+
+import {
+  GetGuestbookMessagesDto,
+  NewGuestbookMessageDto,
+  UpdateGuestbookMessageDto,
+} from '../dto';
 
 @Injectable()
 export class GuestbookService {
@@ -11,15 +18,97 @@ export class GuestbookService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  private GuestbookMessageSelect = {
+    id: true,
+    message: true,
+    isEdited: true,
+    createdAt: true,
+    updatedAt: true,
+    author: {
+      select: {
+        name: true,
+        photo: true,
+      },
+    },
+  };
+
   async newGuestbookMessage(
-    dto: NewGuestbookMessageDto,
+    user: IUser,
+    { message }: NewGuestbookMessageDto,
   ): Promise<IGuestBookMessage> {
     try {
       return this.prisma.guestBookMessage.create({
-        data: dto,
+        data: {
+          authorId: user.id,
+          message,
+        },
+        select: this.GuestbookMessageSelect,
       });
     } catch (error) {
       this.logger.error('Failed to create new guestbook message:', error);
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteGuestbookMessage(
+    user: IUser,
+    id: number,
+  ): Promise<{ success: boolean }> {
+    const guestBookMessage = await this.prisma.guestBookMessage.findFirst({
+      where: {
+        id,
+        authorId: user.id,
+      },
+    });
+
+    if (!guestBookMessage) {
+      throw new NotFoundException(ErrorEnum.MESSAGE_NOT_FOUND);
+    }
+
+    try {
+      await this.prisma.guestBookMessage.delete({
+        where: {
+          id,
+          authorId: user.id,
+        },
+      });
+      return { success: true };
+    } catch (error) {
+      this.logger.error('Failed to delete guestbook message:', error);
+      throw new Error(error.message);
+    }
+  }
+
+  async updateGuestbookMessage(
+    user: IUser,
+    id: number,
+    { message }: UpdateGuestbookMessageDto,
+  ): Promise<IGuestBookMessage> {
+    const guestBookMessage = await this.prisma.guestBookMessage.findFirst({
+      where: {
+        id,
+        authorId: user.id,
+      },
+    });
+
+    if (!guestBookMessage) {
+      throw new NotFoundException(ErrorEnum.MESSAGE_NOT_FOUND);
+    }
+
+    try {
+      return this.prisma.guestBookMessage.update({
+        where: {
+          id,
+          authorId: user.id,
+        },
+        data: {
+          message,
+          isEdited: true,
+        },
+        select: this.GuestbookMessageSelect,
+      });
+    } catch (error) {
+      this.logger.error('Failed to update guestbook message:', error);
       throw new Error(error.message);
     }
   }
@@ -36,6 +125,7 @@ export class GuestbookService {
       orderBy: {
         createdAt: 'desc',
       },
+      select: this.GuestbookMessageSelect,
     });
 
     try {

@@ -11,6 +11,8 @@ export enum ErrorEnum {
 
   VIEWS_NOT_FOUND = 'No views found.',
 
+  MESSAGE_NOT_FOUND = 'No message found.',
+
   VERIFICATION_CODE_SEND_FAILED = 'Failed to send verification code.',
   VERIFICATION_CODE_INVALID = 'Incorrect verification code.',
   VERIFICATION_CODE_EXPIRED = 'Verification code expired.',

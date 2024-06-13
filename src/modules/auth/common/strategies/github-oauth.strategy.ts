@@ -56,7 +56,7 @@ export class GitHubStrategy extends PassportStrategy(Strategy, 'github') {
     const githubOauthUser: IGitHubOauthUser = {
       name: displayName?.split(' ')[0] || username,
       email,
-      surname: displayName?.split(' ')[1] || '',
+      surname: displayName?.split(' ')[1] || ' ',
       photo: photos[0]?.value,
     };
 

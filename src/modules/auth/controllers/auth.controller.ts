@@ -56,8 +56,11 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalOtpGuard)
-  async loginOtp(@AuthUser() user: IUser) {
-    return user;
+  async loginOtp(@Query('next') next: string, @AuthUser() user: IUser) {
+    return {
+      email: user.email,
+      redirectUrl: `/redirect?to=${next}`,
+    };
   }
 
   @Public()

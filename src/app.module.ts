@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 
 import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
 
 import { AppController } from './app.controller';
 
@@ -28,6 +29,9 @@ import { SessionAuthGuard } from './modules/auth/common/guards';
       expandVariables: true,
       envFilePath: '.env',
       load: [...Object.values(config)],
+    }),
+    CacheModule.register({
+      isGlobal: true,
     }),
     ThrottlerModule.forRootAsync({
       useFactory: () => ({

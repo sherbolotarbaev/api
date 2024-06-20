@@ -9,10 +9,6 @@ export const SecurityConfig = registerAs(securityRegToken, () => ({
   googleClientSecret: env('GOOGLE_CLIENT_SECRET'),
   googleCallbackUrl: `${env('BASE_URL')}/google/callback`,
 
-  metaClientId: env('META_CLIENT_ID'),
-  metaClientSecret: env('META_CLIENT_SECRET'),
-  metaCallbackUrl: `${env('BASE_URL')}/meta/callback`,
-
   githubClientId: env('GITHUB_CLIENT_ID'),
   githubClientSecret: env('GITHUB_CLIENT_SECRET'),
   githubCallbackUrl: `${env('BASE_URL')}/github/callback`,

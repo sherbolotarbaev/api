@@ -32,17 +32,20 @@ declare global {
     readonly expiresAt: Date;
   }
 
+  interface IGuestBookMessageAuthor {
+    readonly name: string;
+    readonly email: string;
+    readonly photo: string;
+    readonly isVerified: boolean;
+  }
+
   interface IGuestBookMessage {
     readonly id: number;
     readonly message: string;
     readonly isEdited: boolean;
     readonly createdAt: Date;
     readonly updatedAt: Date;
-    readonly author: {
-      readonly name: string;
-      readonly email: string;
-      readonly photo: string;
-    };
+    readonly author: IGuestBookMessageAuthor;
   }
 
   interface IView {

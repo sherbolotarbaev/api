@@ -29,6 +29,7 @@ export class GuestbookService {
         name: true,
         email: true,
         photo: true,
+        isVerified: true,
       },
     },
   };

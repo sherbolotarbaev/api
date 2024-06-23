@@ -116,8 +116,10 @@ export class AuthService {
   }
 
   async getMe(ip: string, user: IUser): Promise<IUser> {
-    const location = await this.locationService.getLocation({ ip });
-    this.setMetaData(user.id, location);
+    if (!isDev) {
+      const location = await this.locationService.getLocation({ ip });
+      this.setMetaData(user.id, location);
+    }
 
     return user;
   }

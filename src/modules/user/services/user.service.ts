@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 // import { PrismaService } from '~/shared/database/services';
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
 
-import { UpdateUserDto } from '../dto';
+import { CreateUserDto, UpdateUserDto } from '../dto';
 
 @Injectable()
 export class UserService {
@@ -42,6 +42,13 @@ export class UserService {
       where: {
         email: email.toLowerCase().trim(),
       },
+      include: this.UserInlude,
+    });
+  }
+
+  async createUser(data: CreateUserDto): Promise<IUser> {
+    return this.prisma.user.create({
+      data,
       include: this.UserInlude,
     });
   }

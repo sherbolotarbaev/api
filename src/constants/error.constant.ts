@@ -11,6 +11,12 @@ export enum ErrorEnum {
 
   VIEWS_NOT_FOUND = 'No views found.',
 
+  POST_NOT_FOUND = 'No post found.',
+
+  LIKE_EXISTS = 'You have already liked this post.',
+  LIKE_NOT_FOUND = 'No like found.',
+  LIKES_NOT_FOUND = 'No likes found.',
+
   MESSAGE_NOT_FOUND = 'No message found.',
 
   VERIFICATION_CODE_SEND_FAILED = 'Failed to send verification code.',

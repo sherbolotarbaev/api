@@ -51,6 +51,12 @@ declare global {
   interface IView {
     readonly slug: string;
     readonly count: number;
+    readonly likesCount: number;
+  }
+
+  interface ILike {
+    readonly userId: number;
+    readonly slug: string;
   }
 
   interface IEmailOtp {

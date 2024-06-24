@@ -19,6 +19,7 @@ import {
   GuestbookModule,
   ViewModule,
   ContactModule,
+  LikeModule,
 } from './modules';
 import { SessionAuthGuard } from './modules/auth/common/guards';
 
@@ -48,6 +49,7 @@ import { SessionAuthGuard } from './modules/auth/common/guards';
     GuestbookModule,
     ViewModule,
     ContactModule,
+    LikeModule,
   ],
   controllers: [AppController],
   providers: [

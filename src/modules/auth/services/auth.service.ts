@@ -54,44 +54,14 @@ export class AuthService {
     photo,
   }: IGoogleOauthUser | IGitHubOauthUser): Promise<IUser> {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          email,
-        },
-        include: {
-          metaData: {
-            select: {
-              ip: true,
-              city: true,
-              region: true,
-              country: true,
-              timezone: true,
-              lastSeen: true,
-            },
-          },
-        },
-      });
+      const user = await this.userService.findByEmail(email);
 
       if (!user) {
-        return this.prisma.user.create({
-          data: {
-            name,
-            surname,
-            email,
-            photo,
-          },
-          include: {
-            metaData: {
-              select: {
-                ip: true,
-                city: true,
-                region: true,
-                country: true,
-                timezone: true,
-                lastSeen: true,
-              },
-            },
-          },
+        return this.userService.createUser({
+          name,
+          surname,
+          email,
+          photo,
         });
       }
 

@@ -8,11 +8,11 @@ import { Ip } from '../../../decorators/ip.decorator'; // fix: vercel issue
 import { ContactService } from '../services';
 import { NewContactMessageDto } from '../dto';
 
+@Public()
 @Controller('contact')
 export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
-  @Public()
   @Post()
   @HttpCode(HttpStatus.OK)
   async newMessage(@Ip() ip: string, @Body() dto: NewContactMessageDto) {

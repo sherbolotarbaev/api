@@ -13,18 +13,20 @@ enum UserRole {
 }
 
 model User {
-  id         Int                @id @default(autoincrement())
-  email      String             @unique
-  name       String             @db.VarChar(64)
-  surname    String             @db.VarChar(64)
+  id         Int           @id @default(autoincrement())
+  email      String        @unique
+  name       String        @db.VarChar(64)
+  surname    String        @db.VarChar(64)
   photo      String?
-  isActive   Boolean            @default(true)
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  isVerified Boolean            @default(false)
-  role       UserRole           @default(USER)
+  isActive   Boolean       @default(true)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  isVerified Boolean       @default(false)
+  role       UserRole      @default(USER)
   metaData   UserMetaData?
-  messages   GuestBookMessage[]
+
+  messages GuestBookMessage[]
+  likes    Like[]
 }
 
 model UserMetaData {
@@ -35,7 +37,8 @@ model UserMetaData {
   country  String?
   timezone String?
   lastSeen DateTime
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model GuestBookMessage {
@@ -57,8 +60,21 @@ model Session {
 }
 
 model View {
-  slug  String @id
-  count Int    @default(0)
+  slug       String @id
+  count      Int    @default(0)
+  likesCount Int    @default(0)
+
+  likes Like[]
+}
+
+model Like {
+  userId Int
+  slug   String
+
+  user User @relation(fields: [userId], references: [id])
+  view View @relation(fields: [slug], references: [slug])
+
+  @@id([userId, slug])
 }
 
 model EmailOtp {

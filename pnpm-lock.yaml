@@ -23,6 +23,9 @@ dependencies:
   '@nestjs/core':
     specifier: ^10.0.0
     version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/platform-express@10.3.8)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+  '@nestjs/mapped-types':
+    specifier: '*'
+    version: 0.0.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13)
   '@nestjs/passport':
     specifier: ^10.0.3
     version: 10.0.3(@nestjs/common@10.0.0)(passport@0.7.0)
@@ -1251,6 +1254,18 @@ packages:
       uuid: 7.0.1
     transitivePeerDependencies:
       - encoding
+    dev: false
+
+  /@nestjs/mapped-types@0.0.1(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-4G4Ui7Sj0UqXiZsUFk/6cPD3K7uZEFSElzkOftaJ3/lXW+HUi1/vfWXabF53qrzO1enTRQDxt1plDbP6SsqXEg==}
+    peerDependencies:
+      class-transformer: ^0.2.3
+      class-validator: ^0.11.1
+      reflect-metadata: ^0.1.12
+    dependencies:
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+      reflect-metadata: 0.1.13
     dev: false
 
   /@nestjs/passport@10.0.3(@nestjs/common@10.0.0)(passport@0.7.0):

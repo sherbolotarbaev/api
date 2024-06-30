@@ -59,7 +59,7 @@ export class AuthController {
   async loginOtp(@Query('next') next: string, @AuthUser() user: IUser) {
     return {
       email: user.email,
-      redirectUrl: `/redirect?to=${next}`,
+      redirectUrl: `/${next}`,
     };
   }
 

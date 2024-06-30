@@ -80,7 +80,7 @@ export class AuthService {
       .status(200)
       .redirect(
         user.isActive
-          ? `${this.appConfig.frontBaseUrl}/redirect?to=${next}`
+          ? `${this.appConfig.frontBaseUrl}/${next}`
           : `${this.appConfig.baseUrl}/logout?next=/sign-in?error=403`,
       );
   }

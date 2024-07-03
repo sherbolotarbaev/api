@@ -6,11 +6,11 @@ export class AppController {
   @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
-  async main(): Promise<{
+  main(): {
     message: string;
-  }> {
+  } {
     return {
-      message: 'hello',
+      message: 'hello 👋',
     };
   }
 }

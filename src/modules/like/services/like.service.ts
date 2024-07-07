@@ -17,7 +17,7 @@ export class LikeService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async addLike(user: IUser, slug: string): Promise<ILike[]> {
+  async addLike(user: IUser, slug: string): Promise<ILike> {
     const post = await this.prisma.view.findUnique({
       where: {
         slug,
@@ -53,16 +53,10 @@ export class LikeService {
         },
       });
 
-      await this.prisma.like.create({
+      return this.prisma.like.create({
         data: {
           slug,
           userId: user.id,
-        },
-      });
-
-      return this.prisma.like.findMany({
-        where: {
-          slug,
         },
       });
     } catch (error) {

@@ -132,10 +132,6 @@ export class LikeService {
       },
     });
 
-    if (!likes.length) {
-      throw new NotFoundException(ErrorEnum.LIKES_NOT_FOUND);
-    }
-
     try {
       return likes;
     } catch (error) {

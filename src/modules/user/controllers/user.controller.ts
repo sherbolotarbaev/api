@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  UseGuards,
-} from '@nestjs/common';
-
-// import { AdminGuard } from '~/modules/auth/common/guards';
-import { AdminGuard } from '../../auth/common/guards'; // fix: vercel issue
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 
 import { UserService } from '../services';
 
@@ -17,7 +8,6 @@ export class UserController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AdminGuard)
   async getUsers() {
     return this.userService.findAll();
   }

@@ -38,7 +38,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
     origin: [
       frontBaseUrl,
       'http://localhost:3000',
-      'https://sherbolotarbaev.vercel.app',
+      'https://www.sherbolotarbaev.co',
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

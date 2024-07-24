@@ -26,7 +26,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
     infer: true,
   });
 
-  const { frontBaseUrl } = configService.get('app', {
+  const { frontBaseUrl, frontAuthUrl } = configService.get('app', {
     infer: true,
   });
 
@@ -35,11 +35,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
   app.use(helmet());
 
   app.enableCors({
-    origin: [
-      frontBaseUrl,
-      'http://localhost:3000',
-      'https://www.sherbolotarbaev.co',
-    ],
+    origin: [frontBaseUrl, frontAuthUrl],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });

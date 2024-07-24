@@ -20,7 +20,7 @@ export class GoogleOauthGuard extends AuthGuard('google') {
 
     if (error) {
       response.redirect(
-        `${this.appConfig.frontBaseUrl}/sign-in?error=${error}`,
+        `${this.appConfig.frontAuthUrl}/sign-in?error=${error}`,
       );
     }
 

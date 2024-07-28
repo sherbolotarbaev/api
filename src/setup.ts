@@ -2,18 +2,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 
-import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import helmet from 'helmet';
 import passport from 'passport';
 
-import { useContainer } from 'class-validator';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
+import { useContainer } from 'class-validator';
 
 import type { ConfigKeyPaths } from './config';
-import { isDev } from './global/env';
 import { COOKIE_MAX_AGE, COOKIE_NAME } from './constants/cookie.constant';
+import { isDev } from './global/env';
 
 import { AppModule } from './app.module';
 import { PrismaService } from './shared/database/services';
@@ -35,7 +35,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
   app.use(helmet());
 
   app.enableCors({
-    origin: [frontBaseUrl, frontAuthUrl],
+    origin: [frontBaseUrl, frontAuthUrl, 'https://www.sherbolotarbaev.co'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });

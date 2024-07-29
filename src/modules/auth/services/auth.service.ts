@@ -19,9 +19,9 @@ import { EmailService } from '../../../shared/email/services'; // fix: vercel is
 import { LocationService } from '../../../shared/location/services'; // fix: vercel issue
 
 // import { hash } from '~/utils/bcrypt';
-import { compare, hash } from '../../../utils/bcrypt'; // fix: vercel issue
 import moment from 'moment';
 import type { IPinfo } from 'node-ipinfo';
+import { compare, hash } from '../../../utils/bcrypt'; // fix: vercel issue
 
 // import { type IAppConfig, AppConfig } from '~/config';
 import { type IAppConfig, AppConfig } from '../../../config'; // fix: vercel issue
@@ -192,7 +192,7 @@ export class AuthService {
         }
 
         return response.redirect(
-          `${this.appConfig.frontBaseUrl}${request.query.next || '/'}`,
+          `${this.appConfig.frontAuthUrl}${request.query.next || '/'}`,
         );
       });
     });

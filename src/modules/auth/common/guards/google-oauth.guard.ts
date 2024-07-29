@@ -1,4 +1,4 @@
-import { type ExecutionContext, Injectable, Inject } from '@nestjs/common';
+import { type ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 import type { Request, Response } from 'express';

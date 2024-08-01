@@ -12,15 +12,15 @@ import {
 
 import type { Response } from 'express';
 
+import { AuthUser, Public } from '../common/decorators';
 import {
-  GoogleOauthGuard,
   GitHubOauthGuard,
+  GoogleOauthGuard,
   LocalOtpGuard,
 } from '../common/guards';
-import { AuthUser, Public } from '../common/decorators';
 
-import { AuthService } from '../services';
 import { SendOtpDto } from '../dto';
+import { AuthService } from '../services';
 
 @Public()
 @Controller()
@@ -59,7 +59,7 @@ export class AuthController {
   async loginOtp(@Query('next') next: string, @AuthUser() user: IUser) {
     return {
       email: user.email,
-      redirectUrl: `${next}`,
+      redirectUrl: `${next || '/'}`,
     };
   }
 

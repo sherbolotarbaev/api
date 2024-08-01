@@ -124,6 +124,7 @@ export class EmailService {
 
       throw new TooManyRequestsException(
         `Please try again in ${minutesRemaining} ${minuteText}.`,
+        timeRemaining,
       );
     }
 

@@ -11,7 +11,7 @@ import type { Request, Response } from 'express';
 
 import { AuthUser } from '../common/decorators';
 // import { Ip } from '~/decorators/ip.decorator';
-import { Ip } from '../../../decorators/ip.decorator'; // fix: vercel issue
+import { Ip } from '../../../common/decorators/ip.decorator'; // fix: vercel issue
 
 import { AuthService } from '../services';
 

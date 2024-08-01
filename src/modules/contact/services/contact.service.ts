@@ -8,8 +8,8 @@ import {
 // import { EmailService } from '~/shared/email/services';
 import { EmailService } from '../../../shared/email/services'; // fix: vercel issue
 // import { LocationService } from '~/shared/location/services';
-import { LocationService } from '../../../shared/location/services'; // fix: vercel issue
 import { TelegramService } from 'nestjs-telegram';
+import { LocationService } from '../../../shared/location/services'; // fix: vercel issue
 
 // import { ISecurityConfig, SecurityConfig } from '~/config';
 import { type ISecurityConfig, SecurityConfig } from '../../../config'; // fix: vercel issue

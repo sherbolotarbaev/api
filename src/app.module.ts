@@ -1,29 +1,29 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 
-import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler';
 
 import { AppController } from './app.controller';
 
 import config from './config';
 
+import {
+  AuthModule,
+  ContactModule,
+  GuestbookModule,
+  LikeModule,
+  UserModule,
+  ViewModule,
+} from './modules';
+import { SessionAuthGuard } from './modules/auth/common/guards';
 import { DatabaseModule } from './shared/database';
 import { EmailModule } from './shared/email';
 import { LocationModule } from './shared/location';
-import {
-  AuthModule,
-  UserModule,
-  GuestbookModule,
-  ViewModule,
-  ContactModule,
-  LikeModule,
-} from './modules';
-import { SessionAuthGuard } from './modules/auth/common/guards';
 
-import { LoggingMiddleware } from './middlewares/logging.middleware';
+import { LoggingMiddleware } from './common/middlewares/logging.middleware';
 
 @Module({
   imports: [
@@ -35,6 +35,7 @@ import { LoggingMiddleware } from './middlewares/logging.middleware';
     }),
     CacheModule.register({
       isGlobal: true,
+      ttl: 0, // seconds, 0 means no expiration by default
     }),
     ThrottlerModule.forRootAsync({
       useFactory: () => ({

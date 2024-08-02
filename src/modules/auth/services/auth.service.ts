@@ -215,8 +215,8 @@ export class AuthService {
     userId: number,
     { city, country, region, timezone, ip }: IPinfo,
     device: string,
-  ): Promise<void> {
-    await this.prisma.userMetaData.upsert({
+  ): Promise<IUserMetaData> {
+    return this.prisma.userMetaData.upsert({
       where: {
         userId,
       },

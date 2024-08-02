@@ -73,6 +73,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
         path: '/',
         domain: !isDev ? '.sherbolotarbaev.co' : 'localhost',
         sameSite: !isDev ? 'none' : 'lax',
+        signed: false,
         secure: !isDev,
         maxAge: COOKIE_MAX_AGE,
       },

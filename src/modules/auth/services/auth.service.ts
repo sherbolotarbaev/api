@@ -85,10 +85,10 @@ export class AuthService {
       );
   }
 
-  async getMe(ip: string, user: IUser): Promise<IUser> {
+  async getMe(ip: string, userAgent: string, user: IUser): Promise<IUser> {
     if (!isDev) {
       const location = await this.locationService.getLocation({ ip });
-      this.setMetaData(user.id, location);
+      this.setMetaData(user.id, location, userAgent);
     }
 
     return user;
@@ -214,6 +214,7 @@ export class AuthService {
   private async setMetaData(
     userId: number,
     { city, country, region, timezone, ip }: IPinfo,
+    device: string,
   ): Promise<void> {
     await this.prisma.userMetaData.upsert({
       where: {
@@ -227,6 +228,7 @@ export class AuthService {
         region,
         timezone,
         lastSeen: new Date(),
+        device,
       },
       update: {
         ip,
@@ -235,6 +237,7 @@ export class AuthService {
         region,
         timezone,
         lastSeen: new Date(),
+        device,
       },
     });
   }

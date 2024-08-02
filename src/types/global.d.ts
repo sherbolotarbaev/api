@@ -23,6 +23,7 @@ declare global {
     readonly country?: string;
     readonly timezone?: string;
     readonly lastSeen: Date;
+    readonly device?: string;
   }
 
   interface ISession {

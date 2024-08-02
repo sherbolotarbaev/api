@@ -18,6 +18,7 @@ export class UserService {
         country: true,
         timezone: true,
         lastSeen: true,
+        device: true,
       },
     },
   };

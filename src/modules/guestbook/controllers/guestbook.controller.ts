@@ -10,22 +10,19 @@ import {
   Post,
   Put,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
-import { CacheInterceptor } from '@nestjs/cache-manager';
 
 // import { AuthUser, Public } from '~/modules/auth/common/decorators';
 import { AuthUser, Public } from '../../auth/common/decorators'; // fix: vercel issue
 
-import { GuestbookService } from '../services';
 import {
   GetGuestbookMessagesDto,
   NewGuestbookMessageDto,
   UpdateGuestbookMessageDto,
 } from '../dto';
+import { GuestbookService } from '../services';
 
 @Controller('guestbook')
-@UseInterceptors(CacheInterceptor)
 export class GuestbookController {
   constructor(private readonly guestbookService: GuestbookService) {}
 

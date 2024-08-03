@@ -35,7 +35,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
   app.use(helmet());
 
   app.enableCors({
-    origin: [frontBaseUrl, frontAuthUrl, 'https://www.sherbolotarbaev.co'],
+    origin: [frontBaseUrl, frontAuthUrl],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });

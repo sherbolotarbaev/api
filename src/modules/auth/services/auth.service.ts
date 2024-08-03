@@ -33,7 +33,7 @@ import { isDev } from '../../../global/env'; // fix: vercel issue
 import { COOKIE_NAME } from '../../../constants/cookie.constant'; // fix: vercel issue
 // import { ErrorEnum } from '~/constants/error.constant';
 import { ErrorEnum } from '../../../constants/error.constant';
-import { LoginOtpDto, SendOtpDto } from '../dto';
+import { LoginOtpDto, SendOtpDto, SendOtpResponseModel } from '../dto';
 
 @Injectable()
 export class AuthService {
@@ -127,7 +127,7 @@ export class AuthService {
     }
   }
 
-  async sendOtp({ email }: SendOtpDto): Promise<{ email: string }> {
+  async sendOtp({ email }: SendOtpDto): Promise<SendOtpResponseModel> {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
@@ -142,25 +142,26 @@ export class AuthService {
     const otpHash = await hash(otp);
     const expiresAt = this.getExpiration();
 
-    await this.prisma.emailOtp.upsert({
-      where: {
+    await Promise.all([
+      this.prisma.emailOtp.upsert({
+        where: {
+          email: user.email,
+        },
+        create: {
+          email: user.email,
+          otp: otpHash,
+          expiresAt,
+        },
+        update: {
+          otp: otpHash,
+          expiresAt,
+        },
+      }),
+      this.emailService.sendVerificationCode({
         email: user.email,
-      },
-      create: {
-        email: user.email,
-        otp: otpHash,
-        expiresAt,
-      },
-      update: {
-        otp: otpHash,
-        expiresAt,
-      },
-    });
-
-    await this.emailService.sendVerificationCode({
-      email: user.email,
-      code: otp,
-    });
+        code: otp,
+      }),
+    ]);
 
     try {
       return { email: user.email };

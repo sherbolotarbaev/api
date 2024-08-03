@@ -8,6 +8,7 @@ import { ErrorEnum } from '../../../constants/error.constant'; // fix: vercel is
 
 import {
   GetGuestbookMessagesDto,
+  GetGuestbookMessagesResponseModel,
   NewGuestbookMessageDto,
   UpdateGuestbookMessageDto,
 } from '../dto';
@@ -55,7 +56,7 @@ export class GuestbookService {
   async deleteGuestbookMessage(
     user: IUser,
     id: number,
-  ): Promise<{ success: boolean }> {
+  ): Promise<IGuestBookMessage> {
     const guestBookMessage = await this.prisma.guestBookMessage.findFirst({
       where: {
         id,
@@ -68,13 +69,13 @@ export class GuestbookService {
     }
 
     try {
-      await this.prisma.guestBookMessage.delete({
+      return this.prisma.guestBookMessage.delete({
         where: {
           id,
           authorId: user.id,
         },
+        select: this.GuestbookMessageSelect,
       });
-      return { success: true };
     } catch (error) {
       this.logger.error('Failed to delete guestbook message:', error);
       throw new Error(error.message);
@@ -115,11 +116,9 @@ export class GuestbookService {
     }
   }
 
-  async getGuestbookMessages({ take }: GetGuestbookMessagesDto): Promise<{
-    totalCount: number;
-    count: number;
-    items: IGuestBookMessage[];
-  }> {
+  async getGuestbookMessages({
+    take,
+  }: GetGuestbookMessagesDto): Promise<GetGuestbookMessagesResponseModel> {
     const totalCount = await this.prisma.guestBookMessage.count();
 
     const messages = await this.prisma.guestBookMessage.findMany({

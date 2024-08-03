@@ -16,7 +16,7 @@ import { type ISecurityConfig, SecurityConfig } from '../../../config'; // fix: 
 
 // import { ErrorEnum } from '~/constants/error.constant';
 import { ErrorEnum } from '../../../constants/error.constant'; // fix: vercel issue
-import { NewContactMessageDto } from '../dto';
+import { NewMessageDto, NewMessageResponseModel } from '../dto';
 
 @Injectable()
 export class ContactService {
@@ -32,8 +32,8 @@ export class ContactService {
 
   async newMessage(
     ip: string,
-    { name, email, message }: NewContactMessageDto,
-  ): Promise<{ success: boolean }> {
+    { name, email, message }: NewMessageDto,
+  ): Promise<NewMessageResponseModel> {
     const isEmailValid = await this.emailService.verifyEmail({
       email,
     });

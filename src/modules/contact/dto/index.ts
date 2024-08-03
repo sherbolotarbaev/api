@@ -1,1 +1,2 @@
-export * from './new-contact-message.dto';
+export * from './new-message/new-message-response.model';
+export * from './new-message/new-message.dto';

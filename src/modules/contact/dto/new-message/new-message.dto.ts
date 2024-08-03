@@ -6,7 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class NewContactMessageDto {
+export class NewMessageDto {
   @IsNotEmpty({ message: 'Name cannot be empty.' })
   @IsString({ message: 'Name must be a string.' })
   @MinLength(2, { message: 'Name must be at least 2 characters long.' })

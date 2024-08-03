@@ -5,7 +5,7 @@ import { Public } from '../../auth/common/decorators'; // fix: vercel issue
 // import { Ip } from '~/decorators/ip.decorator';
 import { Ip } from '../../../common/decorators/ip.decorator'; // fix: vercel issue
 
-import { NewContactMessageDto } from '../dto';
+import { NewMessageDto } from '../dto';
 import { ContactService } from '../services';
 
 @Public()
@@ -15,7 +15,7 @@ export class ContactController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async newMessage(@Ip() ip: string, @Body() dto: NewContactMessageDto) {
+  async newMessage(@Ip() ip: string, @Body() dto: NewMessageDto) {
     return this.contactService.newMessage(ip, dto);
   }
 }

@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Post,
   Req,
   Res,
 } from '@nestjs/common';
@@ -31,7 +32,7 @@ export class AccountController {
     return this.authService.getMe(ip, userAgent, user);
   }
 
-  @Get('logout')
+  @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() request: Request, @Res() response: Response) {
     return this.authService.logout(request, response);

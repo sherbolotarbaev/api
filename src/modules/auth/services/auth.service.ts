@@ -71,18 +71,10 @@ export class AuthService {
     }
   }
 
-  async oauthCallback(
-    user: IUser,
-    next: string,
-    response: Response,
-  ): Promise<void> {
+  async oauthCallback(next: string, response: Response): Promise<void> {
     return response
       .status(200)
-      .redirect(
-        user.isActive
-          ? `${this.appConfig.frontBaseUrl}/${next}`
-          : `${this.appConfig.baseUrl}/logout?next=/sign-in?error=403`,
-      );
+      .redirect(`${this.appConfig.frontBaseUrl}/${next}`);
   }
 
   async getMe(ip: string, userAgent: string, user: IUser): Promise<IUser> {

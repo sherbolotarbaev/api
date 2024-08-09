@@ -30,6 +30,10 @@ export class AdminGuard implements CanActivate {
 
     if (!user) return false;
 
+    if (!user.isActive) {
+      throw new ForbiddenException(ErrorEnum.USER_DEACTIVATED);
+    }
+
     if (user.role !== 'ADMIN') {
       throw new ForbiddenException(ErrorEnum.ACCESS_DENIED);
     }

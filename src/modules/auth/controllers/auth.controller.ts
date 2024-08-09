@@ -30,27 +30,19 @@ export class AuthController {
   @Get('google/callback')
   @HttpCode(HttpStatus.OK)
   @UseGuards(GoogleOauthGuard)
-  async googleOauth(
-    @Query('state') state: string,
-    @AuthUser() user: IUser,
-    @Res() response: Response,
-  ) {
+  async googleOauth(@Query('state') state: string, @Res() response: Response) {
     const queryParams = new URLSearchParams(state);
     const next = queryParams.get('next');
-    return this.authService.oauthCallback(user, next, response);
+    return this.authService.oauthCallback(next, response);
   }
 
   @Get('github/callback')
   @HttpCode(HttpStatus.OK)
   @UseGuards(GitHubOauthGuard)
-  async githubOauth(
-    @Query('state') state: string,
-    @AuthUser() user: IUser,
-    @Res() response: Response,
-  ) {
+  async githubOauth(@Query('state') state: string, @Res() response: Response) {
     const queryParams = new URLSearchParams(state);
     const next = queryParams.get('next');
-    return this.authService.oauthCallback(user, next, response);
+    return this.authService.oauthCallback(next, response);
   }
 
   @Post('login')

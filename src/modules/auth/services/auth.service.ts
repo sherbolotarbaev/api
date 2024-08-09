@@ -74,7 +74,7 @@ export class AuthService {
   async oauthCallback(next: string, response: Response): Promise<void> {
     return response
       .status(200)
-      .redirect(`${this.appConfig.frontBaseUrl}/${next}`);
+      .redirect(`${this.appConfig.frontBaseUrl}${next}`);
   }
 
   async getMe(ip: string, userAgent: string, user: IUser): Promise<IUser> {
@@ -185,7 +185,7 @@ export class AuthService {
         }
 
         return response.redirect(
-          `${this.appConfig.frontAuthUrl}${request.query.next || '/'}`,
+          `${this.appConfig.frontBaseUrl}${request.query.next || '/'}`,
         );
       });
     });

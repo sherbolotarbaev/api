@@ -14,33 +14,41 @@ function formatValue<T extends BaseType = string>(
 
   if (!callback) return value as unknown as T;
 
-  return callback(value);
+  try {
+    return callback(value);
+  } catch (error) {
+    console.error(`Error parsing environment variable "${key}":`, error);
+    return defaultValue;
+  }
 }
 
-export function env(key: string, defaultValue: string = '') {
-  return formatValue(key, defaultValue);
+export function env(key: string, defaultValue: string = ''): string {
+  return formatValue<string>(key, defaultValue);
 }
 
-export function envString(key: string, defaultValue: string = '') {
-  return formatValue(key, defaultValue);
+export function envString(key: string, defaultValue: string = ''): string {
+  return formatValue<string>(key, defaultValue);
 }
 
-export function envNumber(key: string, defaultValue: number = 0) {
-  return formatValue(key, defaultValue, (value) => {
-    try {
-      return Number(value);
-    } catch {
-      throw new Error(`${key} environment variable is not a number`);
+export function envNumber(key: string, defaultValue: number = 0): number {
+  return formatValue<number>(key, defaultValue, (value) => {
+    const parsedValue = Number(value);
+    if (isNaN(parsedValue)) {
+      throw new Error(`${key} environment variable is not a valid number`);
     }
+    return parsedValue;
   });
 }
 
-export function envBoolean(key: string, defaultValue: boolean = false) {
-  return formatValue(key, defaultValue, (value) => {
-    try {
-      return Boolean(JSON.parse(value));
-    } catch {
-      throw new Error(`${key} environment variable is not a boolean`);
+export function envBoolean(
+  key: string,
+  defaultValue: boolean = false,
+): boolean {
+  return formatValue<boolean>(key, defaultValue, (value) => {
+    const parsedValue = JSON.parse(value.toLowerCase());
+    if (typeof parsedValue !== 'boolean') {
+      throw new Error(`${key} environment variable is not a valid boolean`);
     }
+    return parsedValue;
   });
 }

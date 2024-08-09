@@ -10,7 +10,7 @@ import {
 
 import type { Request, Response } from 'express';
 
-import { AuthUser } from '../common/decorators';
+import { AuthUser, Public } from '../common/decorators';
 // import { Ip } from '~/decorators/ip.decorator';
 import { Ip } from '../../../common/decorators/ip.decorator'; // fix: vercel issue
 // import { UserAgent } from '~/common/decorators/user-agent.decorator';
@@ -32,6 +32,7 @@ export class AccountController {
     return this.authService.getMe(ip, userAgent, user);
   }
 
+  @Public()
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() request: Request, @Res() response: Response) {

@@ -5,6 +5,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import type { Request, Response } from 'express';
@@ -74,7 +75,7 @@ export class AuthService {
   async oauthCallback(next: string, response: Response): Promise<void> {
     return response
       .status(200)
-      .redirect(`${this.appConfig.frontBaseUrl}${next}`);
+      .redirect(`${this.appConfig.frontAuthUrl}${next}`);
   }
 
   async getMe(ip: string, userAgent: string, user: IUser): Promise<IUser> {
@@ -163,6 +164,12 @@ export class AuthService {
   }
 
   async logout(request: Request, response: Response): Promise<void> {
+    const user = request.user;
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
     response.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       path: '/',

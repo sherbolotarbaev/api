@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 
 // import { PrismaService } from '~/shared/database/services';
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
@@ -30,7 +35,7 @@ export class ViewService {
       });
     } catch (error) {
       this.logger.error('Failed to add view:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to add view.');
     }
   }
 
@@ -45,7 +50,7 @@ export class ViewService {
       return views;
     } catch (error) {
       this.logger.error('Failed to get views:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to get views.');
     }
   }
 }

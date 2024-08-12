@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -61,7 +62,7 @@ export class LikeService {
       });
     } catch (error) {
       this.logger.error('Failed to add like to post:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to add like to post.');
     }
   }
 
@@ -111,7 +112,7 @@ export class LikeService {
       });
     } catch (error) {
       this.logger.error('Failed to remove post like:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to remove post like.');
     }
   }
 
@@ -136,7 +137,7 @@ export class LikeService {
       return likes;
     } catch (error) {
       this.logger.error('Failed to get post likes:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to get post likes.');
     }
   }
 
@@ -184,7 +185,7 @@ export class LikeService {
       });
     } catch (error) {
       this.logger.error('Failed to add like to message:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to add like to message.');
     }
   }
 
@@ -234,7 +235,7 @@ export class LikeService {
       });
     } catch (error) {
       this.logger.error('Failed to remove message like:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to remove message like.');
     }
   }
 
@@ -259,7 +260,7 @@ export class LikeService {
       return likes;
     } catch (error) {
       this.logger.error('Failed to get message likes:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException('Failed to get message likes.');
     }
   }
 }

@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import type { Prisma } from '@prisma/client';
 
 // import { PrismaService } from '~/shared/database/services';
@@ -35,11 +40,7 @@ export class GuestbookService {
         isVerified: true,
       },
     },
-    likes: {
-      select: {
-        userId: true,
-      },
-    },
+    likes: true,
   };
 
   async newGuestbookMessage(
@@ -61,7 +62,9 @@ export class GuestbookService {
       };
     } catch (error) {
       this.logger.error('Failed to create new guestbook message:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException(
+        'Failed to create new guestbook message.',
+      );
     }
   }
 
@@ -82,6 +85,12 @@ export class GuestbookService {
     }
 
     try {
+      await this.prisma.likeMessage.deleteMany({
+        where: {
+          messageId: id,
+        },
+      });
+
       const { likes, ...rest } = await this.prisma.guestBookMessage.delete({
         where: {
           id,
@@ -90,7 +99,9 @@ export class GuestbookService {
         select: this.GuestbookMessageSelect,
       });
 
-      const hasLiked = this.checkIfLiked(guestBookMessage.likes, user?.id);
+      const hasLiked = guestBookMessage.likes.some(
+        (like) => like.userId === user.id,
+      );
 
       return {
         ...rest,
@@ -98,7 +109,9 @@ export class GuestbookService {
       };
     } catch (error) {
       this.logger.error('Failed to delete guestbook message:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException(
+        'Failed to delete guestbook message.',
+      );
     }
   }
 
@@ -132,7 +145,9 @@ export class GuestbookService {
         select: this.GuestbookMessageSelect,
       });
 
-      const hasLiked = this.checkIfLiked(guestBookMessage.likes, user?.id);
+      const hasLiked = guestBookMessage.likes.some(
+        (like) => like.userId === user.id,
+      );
 
       return {
         ...rest,
@@ -140,7 +155,9 @@ export class GuestbookService {
       };
     } catch (error) {
       this.logger.error('Failed to update guestbook message:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException(
+        'Failed to update guestbook message.',
+      );
     }
   }
 
@@ -148,25 +165,35 @@ export class GuestbookService {
     user: IUser | undefined,
     { take }: GetGuestbookMessagesDto,
   ): Promise<GetGuestbookMessagesResponseModel> {
-    const totalCount = await this.prisma.guestBookMessage.count();
-
-    const messages = await this.prisma.guestBookMessage.findMany({
-      take,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: this.GuestbookMessageSelect,
-    });
-
-    const formattedMessages = messages.map(({ likes, ...rest }) => {
-      const hasLiked = this.checkIfLiked(likes, user?.id);
-      return {
-        ...rest,
-        hasLiked,
-      };
-    });
-
     try {
+      const [totalCount, messages] = await Promise.all([
+        this.prisma.guestBookMessage.count(),
+        this.prisma.guestBookMessage.findMany({
+          take,
+          orderBy: { createdAt: 'desc' },
+          select: this.GuestbookMessageSelect,
+        }),
+      ]);
+
+      const userLikedMessages = user
+        ? new Set(
+            await this.prisma.likeMessage
+              .findMany({
+                where: {
+                  userId: user.id,
+                  messageId: { in: messages.map((m) => m.id) },
+                },
+                select: { messageId: true },
+              })
+              .then((likes) => likes.map((like) => like.messageId)),
+          )
+        : new Set<number>();
+
+      const formattedMessages = messages.map(({ likes, ...rest }) => ({
+        ...rest,
+        hasLiked: userLikedMessages.has(rest.id),
+      }));
+
       return {
         totalCount,
         count: messages.length,
@@ -174,14 +201,9 @@ export class GuestbookService {
       };
     } catch (error) {
       this.logger.error('Failed to get guestbook messages:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException(
+        'Failed to get guestbook messages.',
+      );
     }
-  }
-
-  private checkIfLiked(
-    likes: { userId: number }[],
-    userId: number | undefined,
-  ): boolean {
-    return likes.some((like) => like.userId === userId);
   }
 }

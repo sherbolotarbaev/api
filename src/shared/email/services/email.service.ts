@@ -4,6 +4,7 @@ import {
   Injectable,
   Logger,
   NotImplementedException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 
 import { MailerService } from '@nestjs-modules/mailer';
@@ -54,7 +55,7 @@ export class EmailService {
       );
     } catch (error) {
       this.logger.error('Failed to verify email:', error);
-      throw new Error(error.message);
+      throw new ServiceUnavailableException('Failed to verify email.');
     }
   }
 

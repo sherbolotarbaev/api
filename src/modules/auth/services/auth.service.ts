@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -68,6 +69,7 @@ export class AuthService {
       return user;
     } catch (error) {
       this.logger.error('Failed to validate user:', error.message);
+      throw new InternalServerErrorException('Failed to validate OAuth user.');
     }
   }
 
@@ -115,6 +117,7 @@ export class AuthService {
       return user;
     } catch (error) {
       this.logger.error('Log in via OTP failed:', error.message);
+      throw new InternalServerErrorException('Failed to log in via email.');
     }
   }
 
@@ -158,6 +161,9 @@ export class AuthService {
       return { email: user.email };
     } catch (error) {
       this.logger.error('Failed to send OTP:', error.message);
+      throw new InternalServerErrorException(
+        'Failed to send verification code.',
+      );
     }
   }
 

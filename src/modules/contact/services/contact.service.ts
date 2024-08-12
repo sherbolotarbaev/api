@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 
@@ -68,7 +69,9 @@ export class ContactService {
       return { success: true };
     } catch (error) {
       this.logger.error('Failed to create new message:', error);
-      throw new Error(error.message);
+      throw new InternalServerErrorException(
+        'Failed to create new contact message.',
+      );
     }
   }
 }

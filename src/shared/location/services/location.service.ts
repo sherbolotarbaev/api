@@ -1,11 +1,11 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common'
 
 // import { type ISecurityConfig, SecurityConfig } from '~/config';
 import { type ISecurityConfig, SecurityConfig } from '../../../config'; // fix: vercel issue
 
-import IPinfoWrapper, { IPinfo } from 'node-ipinfo';
+import IPinfoWrapper, { IPinfo } from 'node-ipinfo'
 
-import { GetLocationDto } from '../dto';
+import { GetLocationDto } from '../dto'
 
 @Injectable()
 export class LocationService {
@@ -25,7 +25,7 @@ export class LocationService {
       return data;
     } catch (error) {
       this.logger.error('Failed to get location:', error);
-      throw new Error(error.message);
+      throw new ServiceUnavailableException('Failed to get location.');
     }
   }
 }

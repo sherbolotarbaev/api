@@ -1,4 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import type { Prisma } from '@prisma/client';
 
 // import { PrismaService } from '~/shared/database/services';
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
@@ -19,10 +20,11 @@ export class GuestbookService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  private GuestbookMessageSelect = {
+  private GuestbookMessageSelect: Prisma.GuestBookMessageSelect = {
     id: true,
     message: true,
     isEdited: true,
+    likesCount: true,
     createdAt: true,
     updatedAt: true,
     author: {

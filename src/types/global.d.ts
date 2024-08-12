@@ -44,6 +44,7 @@ declare global {
     readonly id: number;
     readonly message: string;
     readonly isEdited: boolean;
+    readonly likesCount: number;
     readonly createdAt: Date;
     readonly updatedAt: Date;
     readonly author: IGuestBookMessageAuthor;

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import type { Prisma } from '@prisma/client';
 
 // import { PrismaService } from '~/shared/database/services';
 import { PrismaService } from '../../../shared/database/services'; // fix: vercel issue
@@ -9,7 +10,7 @@ import { CreateUserDto, UpdateUserDto } from '../dto';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  private UserInlude = {
+  private UserInclude: Prisma.UserInclude = {
     metaData: {
       select: {
         ip: true,
@@ -25,7 +26,7 @@ export class UserService {
 
   async findAll(): Promise<IUser[] | null> {
     return this.prisma.user.findMany({
-      include: this.UserInlude,
+      include: this.UserInclude,
     });
   }
 
@@ -34,7 +35,7 @@ export class UserService {
       where: {
         id,
       },
-      include: this.UserInlude,
+      include: this.UserInclude,
     });
   }
 
@@ -43,14 +44,14 @@ export class UserService {
       where: {
         email: email.toLowerCase().trim(),
       },
-      include: this.UserInlude,
+      include: this.UserInclude,
     });
   }
 
   async createUser(data: CreateUserDto): Promise<IUser> {
     return this.prisma.user.create({
       data,
-      include: this.UserInlude,
+      include: this.UserInclude,
     });
   }
 
@@ -60,7 +61,7 @@ export class UserService {
         id: userId,
       },
       data,
-      include: this.UserInlude,
+      include: this.UserInclude,
     });
   }
 
@@ -69,7 +70,7 @@ export class UserService {
       where: {
         id: userId,
       },
-      include: this.UserInlude,
+      include: this.UserInclude,
     });
   }
 }

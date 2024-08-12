@@ -47,13 +47,18 @@ export class GuestbookService {
     { message }: NewGuestbookMessageDto,
   ): Promise<IGuestBookMessage> {
     try {
-      return this.prisma.guestBookMessage.create({
+      const { likes, ...rest } = await this.prisma.guestBookMessage.create({
         data: {
           authorId: user.id,
           message,
         },
         select: this.GuestbookMessageSelect,
       });
+
+      return {
+        ...rest,
+        hasLiked: false,
+      };
     } catch (error) {
       this.logger.error('Failed to create new guestbook message:', error);
       throw new Error(error.message);
@@ -69,6 +74,7 @@ export class GuestbookService {
         id,
         authorId: user.id,
       },
+      select: this.GuestbookMessageSelect,
     });
 
     if (!guestBookMessage) {
@@ -76,13 +82,20 @@ export class GuestbookService {
     }
 
     try {
-      return this.prisma.guestBookMessage.delete({
+      const { likes, ...rest } = await this.prisma.guestBookMessage.delete({
         where: {
           id,
           authorId: user.id,
         },
         select: this.GuestbookMessageSelect,
       });
+
+      const hasLiked = this.checkIfLiked(guestBookMessage.likes, user?.id);
+
+      return {
+        ...rest,
+        hasLiked,
+      };
     } catch (error) {
       this.logger.error('Failed to delete guestbook message:', error);
       throw new Error(error.message);
@@ -99,6 +112,7 @@ export class GuestbookService {
         id,
         authorId: user.id,
       },
+      select: this.GuestbookMessageSelect,
     });
 
     if (!guestBookMessage) {
@@ -106,7 +120,7 @@ export class GuestbookService {
     }
 
     try {
-      return this.prisma.guestBookMessage.update({
+      const { likes, ...rest } = await this.prisma.guestBookMessage.update({
         where: {
           id,
           authorId: user.id,
@@ -117,15 +131,23 @@ export class GuestbookService {
         },
         select: this.GuestbookMessageSelect,
       });
+
+      const hasLiked = this.checkIfLiked(guestBookMessage.likes, user?.id);
+
+      return {
+        ...rest,
+        hasLiked,
+      };
     } catch (error) {
       this.logger.error('Failed to update guestbook message:', error);
       throw new Error(error.message);
     }
   }
 
-  async getGuestbookMessages({
-    take,
-  }: GetGuestbookMessagesDto): Promise<GetGuestbookMessagesResponseModel> {
+  async getGuestbookMessages(
+    user: IUser | undefined,
+    { take }: GetGuestbookMessagesDto,
+  ): Promise<GetGuestbookMessagesResponseModel> {
     const totalCount = await this.prisma.guestBookMessage.count();
 
     const messages = await this.prisma.guestBookMessage.findMany({
@@ -136,15 +158,30 @@ export class GuestbookService {
       select: this.GuestbookMessageSelect,
     });
 
+    const formattedMessages = messages.map(({ likes, ...rest }) => {
+      const hasLiked = this.checkIfLiked(likes, user?.id);
+      return {
+        ...rest,
+        hasLiked,
+      };
+    });
+
     try {
       return {
         totalCount,
         count: messages.length,
-        items: messages,
+        items: formattedMessages,
       };
     } catch (error) {
       this.logger.error('Failed to get guestbook messages:', error);
       throw new Error(error.message);
     }
+  }
+
+  private checkIfLiked(
+    likes: { userId: number }[],
+    userId: number | undefined,
+  ): boolean {
+    return likes.some((like) => like.userId === userId);
   }
 }

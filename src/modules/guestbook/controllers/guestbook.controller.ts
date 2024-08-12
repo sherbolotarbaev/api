@@ -57,7 +57,10 @@ export class GuestbookController {
   @Public()
   @Get('messages')
   @HttpCode(HttpStatus.OK)
-  async getGuestbookMessages(@Query() queryDto: GetGuestbookMessagesDto) {
-    return this.guestbookService.getGuestbookMessages(queryDto);
+  async getGuestbookMessages(
+    @AuthUser() user: IUser,
+    @Query() queryDto: GetGuestbookMessagesDto,
+  ) {
+    return this.guestbookService.getGuestbookMessages(user, queryDto);
   }
 }

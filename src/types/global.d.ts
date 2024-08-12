@@ -45,10 +45,10 @@ declare global {
     readonly message: string;
     readonly isEdited: boolean;
     readonly likesCount: number;
+    readonly hasLiked: boolean;
     readonly createdAt: Date;
     readonly updatedAt: Date;
     readonly author: IGuestBookMessageAuthor;
-    readonly likes: ILikeMessage[];
   }
 
   interface IView {

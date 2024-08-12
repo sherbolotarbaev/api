@@ -13,7 +13,7 @@ export enum ErrorEnum {
 
   POST_NOT_FOUND = 'No post found.',
 
-  LIKE_EXISTS = 'You have already liked this post.',
+  LIKE_EXISTS = 'You have already liked this content.',
   LIKE_NOT_FOUND = 'No like found.',
 
   MESSAGE_NOT_FOUND = 'No message found.',

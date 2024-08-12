@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
 } from '@nestjs/common';
 
@@ -17,21 +18,45 @@ import { LikeService } from '../services';
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post(':slug')
+  @Post('post/:slug')
   @HttpCode(HttpStatus.OK)
-  async addLike(@AuthUser() user: IUser, @Param('slug') slug: string) {
-    return this.likeService.addLike(user, slug);
+  async addPostLike(@AuthUser() user: IUser, @Param('slug') slug: string) {
+    return this.likeService.addPostLike(user, slug);
   }
 
-  @Delete(':slug')
+  @Delete('post/:slug')
   @HttpCode(HttpStatus.OK)
-  async removeLike(@AuthUser() user: IUser, @Param('slug') slug: string) {
-    return this.likeService.removeLike(user, slug);
+  async removePostLike(@AuthUser() user: IUser, @Param('slug') slug: string) {
+    return this.likeService.removePostLike(user, slug);
   }
 
-  @Get(':slug')
+  @Get('post/:slug')
   @HttpCode(HttpStatus.OK)
-  async getLikes(@Param('slug') slug: string) {
-    return this.likeService.getLikes(slug);
+  async getPostLikes(@Param('slug') slug: string) {
+    return this.likeService.getPostLikes(slug);
+  }
+
+  @Post(':id')
+  @HttpCode(HttpStatus.OK)
+  async addMessageLike(
+    @AuthUser() user: IUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.likeService.addMessageLike(user, id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async removeMessageLike(
+    @AuthUser() user: IUser,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.likeService.removeMessageLike(user, id);
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getMessageLikes(@Param('id', ParseIntPipe) id: number) {
+    return this.likeService.getMessageLikes(id);
   }
 }

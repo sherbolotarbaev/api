@@ -55,9 +55,14 @@ declare global {
     readonly likesCount: number;
   }
 
-  interface ILike {
+  interface ILikePost {
     readonly userId: number;
     readonly slug: string;
+  }
+
+  interface ILikeMessage {
+    readonly userId: number;
+    readonly messageId: number;
   }
 
   interface IEmailOtp {

@@ -25,8 +25,9 @@ model User {
   role       UserRole      @default(USER)
   metaData   UserMetaData?
 
-  messages GuestBookMessage[]
-  likes    Like[]
+  messages     GuestBookMessage[]
+  postLikes    LikePost[]
+  messageLikes LikeMessage[]
 }
 
 model UserMetaData {
@@ -43,14 +44,16 @@ model UserMetaData {
 }
 
 model GuestBookMessage {
-  id        Int      @id @default(autoincrement())
-  authorId  Int
-  message   String
-  isEdited  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  authorId   Int
+  message    String
+  isEdited   Boolean  @default(false)
+  likesCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  author User @relation(fields: [authorId], references: [id])
+  author User          @relation(fields: [authorId], references: [id])
+  likes  LikeMessage[]
 }
 
 model Session {
@@ -65,10 +68,10 @@ model View {
   count      Int    @default(0)
   likesCount Int    @default(0)
 
-  likes Like[]
+  likes LikePost[]
 }
 
-model Like {
+model LikePost {
   userId Int
   slug   String
 
@@ -76,6 +79,16 @@ model Like {
   view View @relation(fields: [slug], references: [slug])
 
   @@id([userId, slug])
+}
+
+model LikeMessage {
+  userId    Int
+  messageId Int
+
+  user    User             @relation(fields: [userId], references: [id])
+  message GuestBookMessage @relation(fields: [messageId], references: [id])
+
+  @@id([userId, messageId])
 }
 
 model EmailOtp {

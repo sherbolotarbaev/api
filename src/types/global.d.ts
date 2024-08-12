@@ -48,6 +48,7 @@ declare global {
     readonly createdAt: Date;
     readonly updatedAt: Date;
     readonly author: IGuestBookMessageAuthor;
+    readonly likes: ILikeMessage[];
   }
 
   interface IView {

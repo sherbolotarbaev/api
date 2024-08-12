@@ -35,6 +35,11 @@ export class GuestbookService {
         isVerified: true,
       },
     },
+    likes: {
+      select: {
+        userId: true,
+      },
+    },
   };
 
   async newGuestbookMessage(

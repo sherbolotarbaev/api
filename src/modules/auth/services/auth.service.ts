@@ -21,7 +21,6 @@ import { LocationService } from '../../../shared/location/services'; // fix: ver
 
 // import { hash } from '~/utils/bcrypt';
 import moment from 'moment';
-import type { IPinfo } from 'node-ipinfo';
 import { compare, hash } from '../../../utils/bcrypt'; // fix: vercel issue
 
 // import { type IAppConfig, AppConfig } from '~/config';
@@ -80,8 +79,7 @@ export class AuthService {
 
   async getMe(ip: string, userAgent: string, user: IUser): Promise<IUser> {
     if (!isDev) {
-      const location = await this.locationService.getLocation({ ip });
-      this.setMetaData(user.id, location, userAgent);
+      this.setMetaData(user.id, userAgent, ip);
     }
 
     return user;
@@ -213,9 +211,12 @@ export class AuthService {
 
   private async setMetaData(
     userId: number,
-    { city, country, region, timezone, ip }: IPinfo,
     device: string,
+    ip: string,
   ): Promise<IUserMetaData> {
+    const { city, country, region, timezone } =
+      await this.locationService.getLocation({ ip });
+
     return this.prisma.userMetaData.upsert({
       where: {
         userId,

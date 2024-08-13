@@ -21,17 +21,7 @@ import {
 
 @Injectable()
 export class GuestbookService {
-  private readonly logger = new Logger(GuestbookService.name);
-
-  constructor(private readonly prisma: PrismaService) {}
-
-  private GuestbookMessageSelect: Prisma.GuestBookMessageSelect = {
-    id: true,
-    message: true,
-    isEdited: true,
-    likesCount: true,
-    createdAt: true,
-    updatedAt: true,
+  private GuestBookMessageInclude: Prisma.GuestBookMessageInclude = {
     author: {
       select: {
         name: true,
@@ -40,24 +30,32 @@ export class GuestbookService {
         isVerified: true,
       },
     },
-    likes: true,
+    likes: {
+      select: {
+        userId: true,
+      },
+    },
   };
+
+  private readonly logger = new Logger(GuestbookService.name);
+
+  constructor(private readonly prisma: PrismaService) {}
 
   async newGuestbookMessage(
     user: IUser,
     { message }: NewGuestbookMessageDto,
   ): Promise<IGuestBookMessage> {
     try {
-      const { likes, ...rest } = await this.prisma.guestBookMessage.create({
+      const guestBookMessage = await this.prisma.guestBookMessage.create({
         data: {
           authorId: user.id,
           message,
         },
-        select: this.GuestbookMessageSelect,
+        include: this.GuestBookMessageInclude,
       });
 
       return {
-        ...rest,
+        ...guestBookMessage,
         hasLiked: false,
       };
     } catch (error) {
@@ -77,7 +75,7 @@ export class GuestbookService {
         id,
         authorId: user.id,
       },
-      select: this.GuestbookMessageSelect,
+      include: this.GuestBookMessageInclude,
     });
 
     if (!guestBookMessage) {
@@ -91,21 +89,17 @@ export class GuestbookService {
         },
       });
 
-      const { likes, ...rest } = await this.prisma.guestBookMessage.delete({
+      const deletedMessage = await this.prisma.guestBookMessage.delete({
         where: {
           id,
           authorId: user.id,
         },
-        select: this.GuestbookMessageSelect,
+        include: this.GuestBookMessageInclude,
       });
 
-      const hasLiked = guestBookMessage.likes.some(
-        (like) => like.userId === user.id,
-      );
-
       return {
-        ...rest,
-        hasLiked,
+        ...deletedMessage,
+        hasLiked: false,
       };
     } catch (error) {
       this.logger.error('Failed to delete guestbook message:', error);
@@ -125,7 +119,7 @@ export class GuestbookService {
         id,
         authorId: user.id,
       },
-      select: this.GuestbookMessageSelect,
+      include: this.GuestBookMessageInclude,
     });
 
     if (!guestBookMessage) {
@@ -133,7 +127,7 @@ export class GuestbookService {
     }
 
     try {
-      const { likes, ...rest } = await this.prisma.guestBookMessage.update({
+      const updatedMessage = await this.prisma.guestBookMessage.update({
         where: {
           id,
           authorId: user.id,
@@ -142,7 +136,7 @@ export class GuestbookService {
           message,
           isEdited: true,
         },
-        select: this.GuestbookMessageSelect,
+        include: this.GuestBookMessageInclude,
       });
 
       const hasLiked = guestBookMessage.likes.some(
@@ -150,7 +144,7 @@ export class GuestbookService {
       );
 
       return {
-        ...rest,
+        ...updatedMessage,
         hasLiked,
       };
     } catch (error) {
@@ -171,7 +165,7 @@ export class GuestbookService {
         this.prisma.guestBookMessage.findMany({
           take,
           orderBy: { createdAt: 'desc' },
-          select: this.GuestbookMessageSelect,
+          include: this.GuestBookMessageInclude,
         }),
       ]);
 
@@ -189,9 +183,9 @@ export class GuestbookService {
           )
         : new Set<number>();
 
-      const formattedMessages = messages.map(({ likes, ...rest }) => ({
-        ...rest,
-        hasLiked: userLikedMessages.has(rest.id),
+      const formattedMessages = messages.map((message) => ({
+        ...message,
+        hasLiked: userLikedMessages.has(message.id),
       }));
 
       return {

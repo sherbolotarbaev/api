@@ -54,6 +54,8 @@ model GuestBookMessage {
 
   author User          @relation(fields: [authorId], references: [id])
   likes  LikeMessage[]
+
+  @@index([createdAt, id])
 }
 
 model Session {

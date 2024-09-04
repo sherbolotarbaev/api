@@ -10,7 +10,6 @@ export const AppConfig = registerAs(appRegToken, () => ({
   port: envNumber('PORT', 3000),
   baseUrl: env('BASE_URL'),
   frontBaseUrl: env('FRONT_END_BASE_URL'),
-  frontAuthUrl: env('FRONT_END_AUTH_URL'),
 }));
 
 export type IAppConfig = ConfigType<typeof AppConfig>;

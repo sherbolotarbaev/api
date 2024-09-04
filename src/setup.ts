@@ -26,7 +26,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
     infer: true,
   });
 
-  const { frontBaseUrl, frontAuthUrl } = configService.get('app', {
+  const { frontBaseUrl } = configService.get('app', {
     infer: true,
   });
 
@@ -35,7 +35,7 @@ export function setup(app: NestExpressApplication): NestExpressApplication {
   app.use(helmet());
 
   app.enableCors({
-    origin: [frontBaseUrl, frontAuthUrl],
+    origin: [frontBaseUrl],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });

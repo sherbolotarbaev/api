@@ -20,7 +20,7 @@ export class GitHubOauthGuard extends AuthGuard('github') {
 
     if (error) {
       response.redirect(
-        `${this.appConfig.frontAuthUrl}/sign-in?error=${error}`,
+        `${this.appConfig.frontBaseUrl}/sign-in?error=${error}`,
       );
     }
 
